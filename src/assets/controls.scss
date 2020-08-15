@@ -1,0 +1,58 @@
+:host {
+  display: block;
+  width: 300px;
+}
+
+.controls {
+  display: flex;
+  flex-direction: row;
+
+  align-items: center;
+  border-radius: 100px;
+  font-family: sans-serif;
+  font-size: 14px;
+  background: #f2f5f6;
+  padding: 0 0.2rem;
+  user-select: none;
+
+  &> * {
+    margin: 0.7rem 0.4rem;
+  }
+
+  input, button {
+    cursor: pointer;
+  }
+
+  button {
+    text-align: center;
+    background: #ccc0;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 100%;
+    transition: background-color 0.25s ease 0s;
+    padding: 0;
+  }
+
+  button:hover {
+    background: #ccc5;
+  }
+
+  button:focus {
+    outline: none;
+  }
+
+  button:active {
+    background: #ccca;
+  }
+
+  .seek-bar {
+    flex: 1;
+    min-width: 0;
+    margin-right: 0.8rem;
+  }
+
+  &.playing .play-icon, &.stopped .stop-icon {
+    display: none;
+  }
+}

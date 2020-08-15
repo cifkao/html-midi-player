@@ -1,0 +1,17 @@
+{
+  "name": "html-midi-player",
+  "version": "0.0.1",
+  "author": "Ondřej Cífka",
+  "main": "dist/index.js",
+  "scripts": {
+    "prebuild": "rm -rf dist",
+    "build": "parcel build --target main --no-scope-hoist index.ts",
+    "serve": "parcel serve index.html"
+  },
+  "devDependencies": {
+    "parcel": "^2.0.0-nightly.366",
+    "@parcel/validator-typescript": "^2.0.0-nightly.368",
+    "sass": "^1.26.10",
+    "typescript": "^3.9.7"
+  }
+}

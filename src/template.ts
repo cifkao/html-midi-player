@@ -10,12 +10,12 @@ controlsTemplate.innerHTML = `
 <style>
 ${css}
 </style>
-<div class="controls stopped" part="control-panel">
-  <button class="play" part="play-button">
-    <img src="${playIcon}" class="play-icon">
-    <img src="${stopIcon}" class="stop-icon">
+<div class="controls stopped frozen" part="control-panel">
+  <button class="play" part="play-button" disabled>
+    <img src="${playIcon}" class="icon play-icon">
+    <img src="${stopIcon}" class="icon stop-icon">
   </button>
   <div part="time"><span class="current-time" part="current-time">0:00</span> / <span class="total-time" part="total-time">0:00</span></div>
-  <input type="range" min="0" value="0" step="any" class="seek-bar" part="seek-bar">
+  <input type="range" min="0" value="0" step="any" class="seek-bar" part="seek-bar" disabled>
 </div>
 `;

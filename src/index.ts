@@ -11,6 +11,7 @@ const componentSet = new Set<MagentaPlayerComponent>();
 class MagentaPlayerComponent extends HTMLElement {
   protected player: mm.BasePlayer;
   protected controlPanel: HTMLElement;
+  protected playButton: HTMLButtonElement;
   protected seekBar: HTMLInputElement;
 
   private ns: NoteSequence;
@@ -25,7 +26,8 @@ class MagentaPlayerComponent extends HTMLElement {
     this.attachShadow({mode: 'open'});
     this.shadowRoot.appendChild(controlsTemplate.content.cloneNode(true));
     this.controlPanel = this.shadowRoot.querySelector('.controls');
-    this.controlPanel.querySelector('.play').addEventListener('click', () => this.playClickCallback());
+    this.playButton = this.controlPanel.querySelector('.play');
+    this.playButton.addEventListener('click', () => this.playClickCallback());
     this.seekBar = this.controlPanel.querySelector('.seek-bar');
     this.seekBar.addEventListener('input', () => {
       if (this.player && this.player.getPlayState() === 'started') {
@@ -124,8 +126,12 @@ class MagentaPlayerComponent extends HTMLElement {
     }
 
     if (this.player instanceof mm.SoundFontPlayer) {
-      this.player.loadSamples(this.ns);
+      await this.player.loadSamples(this.ns);
     }
+
+    this.controlPanel.classList.remove('frozen');
+    this.playButton.disabled = false;
+    this.seekBar.disabled = false;
   }
 
   protected playClickCallback() {

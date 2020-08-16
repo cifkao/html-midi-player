@@ -25,6 +25,10 @@
 
   input, button {
     cursor: pointer;
+
+    &:disabled {
+      cursor: inherit;
+    }
   }
 
   button {
@@ -36,18 +40,18 @@
     border-radius: 100%;
     transition: background-color 0.25s ease 0s;
     padding: 0;
-  }
 
-  button:hover {
-    background: #ccc5;
-  }
+    &:not(:disabled):hover {
+      background: #ccc5;
+    }
 
-  button:focus {
-    outline: none;
-  }
+    &:focus {
+      outline: none;
+    }
 
-  button:active {
-    background: #ccca;
+    &:active {
+      background: #ccca;
+    }
   }
 
   .seek-bar {
@@ -59,4 +63,9 @@
   &.playing .play-icon, &.stopped .stop-icon {
     display: none;
   }
+
+  &.frozen > div, &> button:disabled .icon {
+    opacity: 0.5;
+  }
+
 }

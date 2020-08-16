@@ -16,6 +16,6 @@ ${css}
     <img src="${stopIcon}" class="icon stop-icon">
   </button>
   <div part="time"><span class="current-time" part="current-time">0:00</span> / <span class="total-time" part="total-time">0:00</span></div>
-  <input type="range" min="0" value="0" step="any" class="seek-bar" part="seek-bar" disabled>
+  <input type="range" min="0" max="0" value="0" step="any" class="seek-bar" part="seek-bar" disabled>
 </div>
 `;

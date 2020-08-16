@@ -1,6 +1,8 @@
-import {controlsTemplate} from './template';
 import * as mm from '@magenta/music/es6/core';
 import {NoteSequence, INoteSequence} from '@magenta/music/es6/protobuf';
+
+import {controlsTemplate} from './template';
+import * as utils from './utils';
 
 
 const DEFAULT_SOUNDFONT = 'https://storage.googleapis.com/magentadata/js/soundfonts/sgm_plus';
@@ -13,6 +15,8 @@ class MagentaPlayerComponent extends HTMLElement {
   protected controlPanel: HTMLElement;
   protected playButton: HTMLButtonElement;
   protected seekBar: HTMLInputElement;
+  protected currentTimeLabel: HTMLInputElement;
+  protected totalTimeLabel: HTMLInputElement;
 
   private ns: NoteSequence;
   private _src: string;
@@ -27,36 +31,57 @@ class MagentaPlayerComponent extends HTMLElement {
     this.shadowRoot.appendChild(controlsTemplate.content.cloneNode(true));
     this.controlPanel = this.shadowRoot.querySelector('.controls');
     this.playButton = this.controlPanel.querySelector('.play');
-    this.playButton.addEventListener('click', () => this.playClickCallback());
+    this.currentTimeLabel = this.controlPanel.querySelector('.current-time');
+    this.totalTimeLabel = this.controlPanel.querySelector('.total-time');
     this.seekBar = this.controlPanel.querySelector('.seek-bar');
+
+    this.playButton.addEventListener('click', () => {
+      if (this.player.isPlaying()) {
+        this.stop();
+      } else {
+        this.start();
+      }
+    });
     this.seekBar.addEventListener('input', () => {
+      // Pause playback while the user is manipulating the control
       if (this.player && this.player.getPlayState() === 'started') {
         this.player.pause();
       }
     });
     this.seekBar.addEventListener('change', () => {
-      this.currentTime = parseFloat(this.seekBar.value);
-      if (this.player && this.player.getPlayState() === 'paused') {
-        this.player.resume();
+      const time = this.currentTime;  // This returns the seek bar value as a number
+      this.currentTimeLabel.textContent = utils.formatTime(time);
+      if (this.player) {
+        if (this.player.isPlaying()) {
+          this.player.seekTo(time);
+          if (this.player.getPlayState() === 'paused') {
+            this.player.resume();
+          }
+        }
       }
     });
   }
 
   start() {
-    if (this.player && !this.player.isPlaying()) {
-      // Stop all other players
-      for (const other of componentSet) {
-        if (other !== this) {
-          other.stop();
+    if (this.player) {
+      if (this.player.getPlayState() == 'stopped') {
+        // Stop all other players
+        for (const other of componentSet) {
+          if (other !== this) {
+            other.stop();
+          }
         }
-      }
 
-      this.controlPanel.classList.remove('stopped');
-      this.controlPanel.classList.add('playing');
-      this.player.start(this.ns).catch((error) => {
-        console.error(error);
-        this.stopCallback();
-      });
+        this.controlPanel.classList.remove('stopped');
+        this.controlPanel.classList.add('playing');
+        this.player.start(this.ns).catch((error) => {
+          this.stopCallback();
+          throw error;
+        });
+      } else if (this.player.getPlayState() == 'paused') {
+        // This normally should not happen
+        this.player.resume();
+      }
     }
   }
 
@@ -95,17 +120,21 @@ class MagentaPlayerComponent extends HTMLElement {
       return;
     }
 
-    var ns = this.ns;
+    this.freeze();
+
+    let ns : NoteSequence = null;
     if (initNs) {
       if (this._src) {
-        ns = await mm.urlToNoteSequence(this._src);
-        this.ns = ns;
+        this.ns = null;
+        this.ns = await mm.urlToNoteSequence(this._src);
       }
-      this.seekBar.value = '0';
+      this.currentTime = 0;
       this.seekBar.max = String(this.ns.totalTime);
+      this.totalTimeLabel.textContent = utils.formatTime(this.ns.totalTime);
     }
+    ns = this.ns;
 
-    if (!this.ns) {
+    if (!ns) {
       return;
     }
 
@@ -123,27 +152,20 @@ class MagentaPlayerComponent extends HTMLElement {
       }
       this.player = new mm.SoundFontPlayer(soundFont, undefined, undefined, undefined,
                                            callbackObject);
+      await (this.player as mm.SoundFontPlayer).loadSamples(ns);
     }
 
-    if (this.player instanceof mm.SoundFontPlayer) {
-      await this.player.loadSamples(this.ns);
+    if (this.ns !== ns) {
+      // If we started loading a different sequence in the meantime...
+      return;
     }
 
-    this.controlPanel.classList.remove('frozen');
-    this.playButton.disabled = false;
-    this.seekBar.disabled = false;
-  }
-
-  protected playClickCallback() {
-    if (this.player.isPlaying()) {
-      this.stop();
-    } else {
-      this.start();
-    }
+    this.unfreeze();
   }
 
   protected noteCallback(note: NoteSequence.INote) {
     this.seekBar.value = String(note.startTime);
+    this.currentTimeLabel.textContent = utils.formatTime(note.startTime);
   }
 
   protected stopCallback(finished = false) {
@@ -152,6 +174,18 @@ class MagentaPlayerComponent extends HTMLElement {
     }
     this.controlPanel.classList.remove('playing');
     this.controlPanel.classList.add('stopped');
+  }
+
+  protected freeze() {
+    this.playButton.disabled = true;
+    this.seekBar.disabled = true;
+    this.controlPanel.classList.add('frozen');
+  }
+
+  protected unfreeze() {
+    this.controlPanel.classList.remove('frozen');
+    this.playButton.disabled = false;
+    this.seekBar.disabled = false;
   }
 
   get noteSequence() {
@@ -188,6 +222,7 @@ class MagentaPlayerComponent extends HTMLElement {
 
   set currentTime(value: number) {
     this.seekBar.value = String(value);
+    this.currentTimeLabel.textContent = utils.formatTime(this.currentTime);
     if (this.player && this.player.isPlaying()) {
       this.player.seekTo(value);
     }

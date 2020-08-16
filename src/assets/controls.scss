@@ -58,6 +58,13 @@
     flex: 1;
     min-width: 0;
     margin-right: 1.0rem;
+
+    background: transparent;
+
+    &::-moz-range-track {
+      // For some reason, the track is invisible in Firefox by default
+      background-color: #555;
+    }
   }
 
   &.playing .play-icon, &.stopped .stop-icon {

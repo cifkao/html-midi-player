@@ -10,22 +10,22 @@
   "main": "dist/index.js",
   "targets": {
     "main": {
-      "includeNodeModules": true,
+      "includeNodeModules": false,
       "engines": {
-        "browsers": "defaults, not IE 11"
+        "browsers": "supports audio-api and supports custom-elementsv1 and supports shadowdomv1 and supports async-functions"
       }
     }
   },
   "devDependencies": {
     "@parcel/transformer-typescript-tsc": "2.0.0-nightly.366",
     "@parcel/validator-typescript": "2.0.0-nightly.366",
+    "focus-visible": "^5.1.0",
     "parcel": "^2.0.0-nightly.366",
     "sass": "^1.26.10",
     "typescript": "^3.9.7"
   },
   "dependencies": {
-    "@magenta/music": "^1.19.0",
-    "focus-visible": "^5.1.0"
+    "@magenta/music": "^1.19.0"
   },
   "alias": {
     "@magenta/music/es6/core": {

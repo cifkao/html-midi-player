@@ -9,9 +9,13 @@
     "serve": "parcel serve index.html"
   },
   "devDependencies": {
+    "@parcel/transformer-typescript-tsc": "2.0.0-nightly.366",
+    "@parcel/validator-typescript": "2.0.0-nightly.366",
     "parcel": "^2.0.0-nightly.366",
-    "@parcel/validator-typescript": "^2.0.0-nightly.368",
     "sass": "^1.26.10",
     "typescript": "^3.9.7"
+  },
+  "dependencies": {
+    "@magenta/music": "^1.19.0"
   }
 }

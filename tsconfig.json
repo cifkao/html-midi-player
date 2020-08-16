@@ -8,9 +8,13 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "allowUnreachableCode": false,
-    "pretty": true
+    "pretty": true,
+    "skipLibCheck": true,
+    "target": "es6",
+    "module": "es6",
+    "moduleResolution": "node"
   },
-  "include": [ "src" ],
+  "include": [ "index.ts", "src/**/*" ],
   "exclude": [
     "node_modules"
   ]

@@ -4,6 +4,7 @@
     "*.{ts,tsx}": ["@parcel/validator-typescript"]
   },
   "transformers": {
-    "*.svg": ["@parcel/transformer-raw"]
+    "*.svg": ["@parcel/transformer-raw"],
+    "*.{ts,tsx}": ["@parcel/transformer-typescript-tsc"]
   }
 }

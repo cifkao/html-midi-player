@@ -1,16 +1,20 @@
 :host {
-  display: block;
+  display: inline-block;
   width: 300px;
+  margin: 3px;
+  vertical-align: bottom;
+  font-family: sans-serif;
+  font-size: 14px;
 }
 
 .controls {
+  width: inherit;
+  height: inherit;
   display: flex;
   flex-direction: row;
 
   align-items: center;
   border-radius: 100px;
-  font-family: sans-serif;
-  font-size: 14px;
   background: #f2f5f6;
   padding: 0 0.2rem;
   user-select: none;
@@ -49,7 +53,7 @@
   .seek-bar {
     flex: 1;
     min-width: 0;
-    margin-right: 0.8rem;
+    margin-right: 1.0rem;
   }
 
   &.playing .play-icon, &.stopped .stop-icon {

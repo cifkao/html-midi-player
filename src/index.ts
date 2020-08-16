@@ -7,10 +7,11 @@ import * as utils from './utils';
 
 const DEFAULT_SOUNDFONT = 'https://storage.googleapis.com/magentadata/js/soundfonts/sgm_plus';
 
-const componentSet = new Set<MagentaPlayerComponent>();
+let playingPlayer: MagentaPlayerComponent = null;
 
 
 class MagentaPlayerComponent extends HTMLElement {
+  protected domInitialized = false;
   protected player: mm.BasePlayer;
   protected controlPanel: HTMLElement;
   protected playButton: HTMLButtonElement;
@@ -18,14 +19,22 @@ class MagentaPlayerComponent extends HTMLElement {
   protected currentTimeLabel: HTMLInputElement;
   protected totalTimeLabel: HTMLInputElement;
 
-  private ns: NoteSequence;
-  private _src: string;
-  private _soundFont: string;
+  protected ns: NoteSequence;
+  protected _src: string;
+  protected _soundFont: string;
+  protected _playing = false;
 
   static get observedAttributes() { return ['sound-font', 'src']; }
 
   constructor() {
     super();
+  }
+
+  connectedCallback() {
+    if (this.domInitialized) {
+      return;
+    }
+    this.domInitialized = true;
 
     this.attachShadow({mode: 'open'});
     this.shadowRoot.appendChild(controlsTemplate.content.cloneNode(true));
@@ -60,46 +69,8 @@ class MagentaPlayerComponent extends HTMLElement {
         }
       }
     });
-  }
 
-  start() {
-    if (this.player) {
-      if (this.player.getPlayState() == 'stopped') {
-        // Stop all other players
-        for (const other of componentSet) {
-          if (other !== this) {
-            other.stop();
-          }
-        }
-
-        this.controlPanel.classList.remove('stopped');
-        this.controlPanel.classList.add('playing');
-        this.player.start(this.ns).catch((error) => {
-          this.stopCallback();
-          throw error;
-        });
-      } else if (this.player.getPlayState() == 'paused') {
-        // This normally should not happen
-        this.player.resume();
-      }
-    }
-  }
-
-  stop() {
-    if (this.player && this.player.isPlaying()) {
-      this.player.stop();
-      this.stopCallback();
-    }
-  }
-
-  connectedCallback() {
-    componentSet.add(this);
     this.initPlayer();
-  }
-
-  disconnectedCallback() {
-    this.stop();
-    componentSet.delete(this);
   }
 
   attributeChangedCallback(name: string, _oldValue: string, newValue: string) {
@@ -114,15 +85,49 @@ class MagentaPlayerComponent extends HTMLElement {
     }
   }
 
+  start() {
+    (async () => {
+      if (this.player) {
+        if (this.player.getPlayState() == 'stopped') {
+          if (playingPlayer && playingPlayer.playing) {
+            playingPlayer.stop();
+          }
+          playingPlayer = this;
+          this._playing = true;
+
+          this.controlPanel.classList.remove('stopped');
+          this.controlPanel.classList.add('playing');
+          try {
+            await this.player.start(this.ns);
+            this.handleStop(true);
+          } catch (error) {
+            this.handleStop();
+            throw error;
+          }
+        } else if (this.player.getPlayState() == 'paused') {
+          // This normally should not happen, since we pause playback only when seeking.
+          this.player.resume();
+        }
+      }
+    })();
+  }
+
+  stop() {
+    if (this.player && this.player.isPlaying()) {
+      this.player.stop();
+    }
+    this.handleStop();
+  }
+
   protected async initPlayer(initNs = true) {
-    this.stop();
-    if (!this.isConnected) {
+    if (!this.domInitialized) {
       return;
     }
 
+    this.stop();
     this.freeze();
 
-    let ns : NoteSequence = null;
+    let ns: NoteSequence = null;
     if (initNs) {
       if (this._src) {
         this.ns = null;
@@ -142,7 +147,7 @@ class MagentaPlayerComponent extends HTMLElement {
     const callbackObject = {
       // Call callbacks only if we are still playing the same note sequence.
       run: (n: NoteSequence.INote) => (this.ns === ns) && this.noteCallback(n),
-      stop: () => (this.ns === ns) && this.stopCallback(true)
+      stop: () => {}
     };
     if (soundFont === null) {
       this.player = new mm.Player(false, callbackObject);
@@ -168,12 +173,13 @@ class MagentaPlayerComponent extends HTMLElement {
     this.currentTimeLabel.textContent = utils.formatTime(note.startTime);
   }
 
-  protected stopCallback(finished = false) {
+  protected handleStop(finished = false) {
     if (finished) {
       this.seekBar.value = this.seekBar.max;
     }
     this.controlPanel.classList.remove('playing');
     this.controlPanel.classList.add('stopped');
+    this._playing = false;
   }
 
   protected freeze() {
@@ -226,6 +232,10 @@ class MagentaPlayerComponent extends HTMLElement {
     if (this.player && this.player.isPlaying()) {
       this.player.seekTo(value);
     }
+  }
+
+  get playing() {
+    return this._playing;
   }
 }
 

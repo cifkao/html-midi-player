@@ -12,9 +12,18 @@
     "skipLibCheck": true,
     "target": "es6",
     "module": "es6",
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "lib": [
+      "dom",
+      "es6",
+      "dom.iterable",
+      "scripthost"
+    ]
   },
-  "include": [ "index.ts", "src/**/*" ],
+  "include": [
+    "index.ts",
+    "src/**/*"
+  ],
   "exclude": [
     "node_modules"
   ]

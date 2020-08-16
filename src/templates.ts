@@ -3,12 +3,12 @@ import playIcon from 'data-url:./assets/play.svg';
 // @ts-ignore
 import stopIcon from 'data-url:./assets/stop.svg';
 // @ts-ignore
-import css from 'bundle-text:./assets/controls.scss';
+import controlsCSS from 'bundle-text:./assets/controls.scss';
 
 export const controlsTemplate = document.createElement('template');
 controlsTemplate.innerHTML = `
 <style>
-${css}
+${controlsCSS}
 </style>
 <div class="controls stopped frozen" part="control-panel">
   <button class="play" part="play-button" disabled>

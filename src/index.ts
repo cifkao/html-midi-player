@@ -1,3 +1,4 @@
+import 'focus-visible';
 import * as mm from '@magenta/music/es6/core';
 import {NoteSequence, INoteSequence} from '@magenta/music/es6/protobuf';
 
@@ -38,6 +39,10 @@ class MagentaPlayerComponent extends HTMLElement {
 
     this.attachShadow({mode: 'open'});
     this.shadowRoot.appendChild(controlsTemplate.content.cloneNode(true));
+    if ((window as any).applyFocusVisiblePolyfill != null) {
+      (window as any).applyFocusVisiblePolyfill(this.shadowRoot);
+    }
+
     this.controlPanel = this.shadowRoot.querySelector('.controls');
     this.playButton = this.controlPanel.querySelector('.play');
     this.currentTimeLabel = this.controlPanel.querySelector('.current-time');

@@ -2,11 +2,19 @@
   "name": "html-midi-player",
   "version": "0.0.1",
   "author": "Ondřej Cífka",
-  "main": "dist/index.js",
   "scripts": {
     "prebuild": "rm -rf dist",
     "build": "parcel build --target main --no-scope-hoist index.ts",
     "serve": "parcel serve index.html"
+  },
+  "main": "dist/index.js",
+  "targets": {
+    "main": {
+      "includeNodeModules": true,
+      "engines": {
+        "browsers": "defaults, not IE 11"
+      }
+    }
   },
   "devDependencies": {
     "@parcel/transformer-typescript-tsc": "2.0.0-nightly.366",
@@ -16,13 +24,15 @@
     "typescript": "^3.9.7"
   },
   "dependencies": {
-    "@magenta/music": "^1.19.0"
+    "@magenta/music": "^1.19.0",
+    "focus-visible": "^5.1.0"
   },
   "alias": {
-    "@magenta/music/es6/core": { "global": "core" },
-    "@magenta/music/es6/protobuf": { "global": "protobuf" }
-  },
-  "browserslist": [
-    "since 2017-06"
-  ]
+    "@magenta/music/es6/core": {
+      "global": "core"
+    },
+    "@magenta/music/es6/protobuf": {
+      "global": "protobuf"
+    }
+  }
 }

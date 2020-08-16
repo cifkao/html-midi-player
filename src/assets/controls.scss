@@ -7,6 +7,10 @@
   font-size: 14px;
 }
 
+:focus:not(.focus-visible) {
+  outline: none;
+}
+
 .controls {
   width: inherit;
   height: inherit;
@@ -43,10 +47,6 @@
 
     &:not(:disabled):hover {
       background: #ccc5;
-    }
-
-    &:focus {
-      outline: none;
     }
 
     &:active {

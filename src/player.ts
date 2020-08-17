@@ -3,8 +3,11 @@ import {NoteSequence, INoteSequence} from '@magenta/music/es6/protobuf';
 
 import {controlsTemplate} from './templates';
 import * as utils from './utils';
+import {VisualizerElement} from './visualizer';
 
 
+export type NoteEvent = CustomEvent<{note: NoteSequence.Note}>;
+const VISUALIZER_EVENTS = ['start', 'stop', 'note'] as const;
 const DEFAULT_SOUNDFONT = 'https://storage.googleapis.com/magentadata/js/soundfonts/sgm_plus';
 
 let playingPlayer: PlayerElement = null;
@@ -18,13 +21,14 @@ export class PlayerElement extends HTMLElement {
   protected seekBar: HTMLInputElement;
   protected currentTimeLabel: HTMLInputElement;
   protected totalTimeLabel: HTMLInputElement;
+  protected visualizerListeners = new Map<VisualizerElement, {[name: string]: EventListener}>();
 
   protected ns: NoteSequence;
   protected _src: string;
   protected _soundFont: string;
   protected _playing = false;
 
-  static get observedAttributes() { return ['sound-font', 'src']; }
+  static get observedAttributes() { return ['sound-font', 'src', 'visualizer']; }
 
   connectedCallback() {
     if (this.domInitialized) {
@@ -84,41 +88,14 @@ export class PlayerElement extends HTMLElement {
       this.soundFont = newValue;
     } else if (name === 'src') {
       this.src = newValue;
-    }
-  }
-
-  start() {
-    (async () => {
-      if (this.player) {
-        if (this.player.getPlayState() == 'stopped') {
-          if (playingPlayer && playingPlayer.playing) {
-            playingPlayer.stop();
-          }
-          playingPlayer = this;
-          this._playing = true;
-
-          this.controlPanel.classList.remove('stopped');
-          this.controlPanel.classList.add('playing');
-          try {
-            await this.player.start(this.ns);
-            this.handleStop(true);
-          } catch (error) {
-            this.handleStop();
-            throw error;
-          }
-        } else if (this.player.getPlayState() == 'paused') {
-          // This normally should not happen, since we pause playback only when seeking.
-          this.player.resume();
-        }
+    } else if (name === 'visualizer') {
+      const fn = () => { this.setVisualizerSelector(newValue); };
+      if (document.readyState === 'loading') {
+        window.addEventListener('DOMContentLoaded', fn);
+      } else {
+        fn();
       }
-    })();
-  }
-
-  stop() {
-    if (this.player && this.player.isPlaying()) {
-      this.player.stop();
     }
-    this.handleStop();
   }
 
   protected async initPlayer(initNs = true) {
@@ -170,7 +147,64 @@ export class PlayerElement extends HTMLElement {
     this.unfreeze();
   }
 
+  start() {
+    (async () => {
+      if (this.player) {
+        if (this.player.getPlayState() == 'stopped') {
+          if (playingPlayer && playingPlayer.playing) {
+            playingPlayer.stop();
+          }
+          playingPlayer = this;
+          this._playing = true;
+
+          this.controlPanel.classList.remove('stopped');
+          this.controlPanel.classList.add('playing');
+          try {
+            const promise = this.player.start(this.ns);
+            this.dispatchEvent(new CustomEvent('start'));
+            await promise;
+            this.handleStop(true);
+          } catch (error) {
+            this.handleStop();
+            throw error;
+          }
+        } else if (this.player.getPlayState() == 'paused') {
+          // This normally should not happen, since we pause playback only when seeking.
+          this.player.resume();
+        }
+      }
+    })();
+  }
+
+  stop() {
+    if (this.player && this.player.isPlaying()) {
+      this.player.stop();
+    }
+    this.handleStop();
+  }
+
+  addVisualizer(visualizer: VisualizerElement) {
+    const listeners = {
+      start: () => { visualizer.noteSequence = this.noteSequence; },
+      stop: () => { visualizer.clearActiveNotes(); },
+      note: (event: NoteEvent) => { visualizer.redraw(event.detail.note); },
+    } as const;
+    for (const name of VISUALIZER_EVENTS) {
+      this.addEventListener(name, listeners[name]);
+    }
+    this.visualizerListeners.set(visualizer, listeners);
+  }
+
+  removeVisualizer(visualizer: VisualizerElement) {
+    const listeners = this.visualizerListeners.get(visualizer);
+    for (const name of VISUALIZER_EVENTS) {
+      this.removeEventListener(name, listeners[name]);
+    }
+    this.visualizerListeners.delete(visualizer);
+  }
+
   protected noteCallback(note: NoteSequence.INote) {
+    this.dispatchEvent(new CustomEvent('note', {detail: {note}}));
     this.seekBar.value = String(note.startTime);
     this.currentTimeLabel.textContent = utils.formatTime(note.startTime);
   }
@@ -182,6 +216,27 @@ export class PlayerElement extends HTMLElement {
     this.controlPanel.classList.remove('playing');
     this.controlPanel.classList.add('stopped');
     this._playing = false;
+    this.dispatchEvent(new CustomEvent('stop', {detail: {finished}}));
+  }
+
+  protected setVisualizerSelector(selector: string) {
+    // Remove old listeners
+    for (const listeners of this.visualizerListeners.values()) {
+      for (const name of VISUALIZER_EVENTS) {
+        this.removeEventListener(name, listeners[name]);
+      }
+    }
+    this.visualizerListeners.clear();
+
+    // Match visualizers and add them as listeners
+    for (const element of document.querySelectorAll(selector)) {
+      if (!(element instanceof VisualizerElement)) {
+        console.warn(`Selector ${selector} matched non-visualizer element`, element);
+        continue;
+      }
+
+      this.addVisualizer(element);
+    }
   }
 
   protected freeze() {

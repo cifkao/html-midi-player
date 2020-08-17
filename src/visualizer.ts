@@ -72,6 +72,18 @@ export class VisualizerElement extends HTMLElement {
     }
   }
 
+  redraw(activeNote?: NoteSequence.INote) {
+    if (this.visualizer) {
+      this.visualizer.redraw(activeNote, activeNote != null);
+    }
+  }
+
+  clearActiveNotes() {
+    if (this.visualizer) {
+      this.visualizer.clearActiveNotes();
+    }
+  }
+
   get noteSequence() {
     return this.ns;
   }

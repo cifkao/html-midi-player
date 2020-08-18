@@ -209,6 +209,9 @@ export class PlayerElement extends HTMLElement {
   }
 
   protected noteCallback(note: NoteSequence.INote) {
+    if (!this.playing) {
+      return;
+    }
     this.dispatchEvent(new CustomEvent('note', {detail: {note}}));
     this.seekBar.value = String(note.startTime);
     this.currentTimeLabel.textContent = utils.formatTime(note.startTime);
@@ -216,7 +219,7 @@ export class PlayerElement extends HTMLElement {
 
   protected handleStop(finished = false) {
     if (finished) {
-      this.seekBar.value = this.seekBar.max;
+      this.currentTime = this.duration;
     }
     this.controlPanel.classList.remove('playing');
     this.controlPanel.classList.add('stopped');
@@ -294,6 +297,10 @@ export class PlayerElement extends HTMLElement {
     if (this.player && this.player.isPlaying()) {
       this.player.seekTo(value);
     }
+  }
+
+  get duration() {
+    return parseFloat(this.seekBar.max);
   }
 
   get playing() {

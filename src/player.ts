@@ -30,25 +30,30 @@ export class PlayerElement extends HTMLElement {
 
   static get observedAttributes() { return ['sound-font', 'src', 'visualizer']; }
 
-  connectedCallback() {
-    if (this.domInitialized) {
-      return;
-    }
-    this.domInitialized = true;
+  constructor() {
+    super();
 
     this.attachShadow({mode: 'open'});
     this.shadowRoot.appendChild(controlsTemplate.content.cloneNode(true));
-    const applyFocusVisiblePolyfill =
-      (window as any).applyFocusVisiblePolyfill as (scope: Document | ShadowRoot) => void;
-    if (applyFocusVisiblePolyfill != null) {
-      applyFocusVisiblePolyfill(this.shadowRoot);
-    }
 
     this.controlPanel = this.shadowRoot.querySelector('.controls');
     this.playButton = this.controlPanel.querySelector('.play');
     this.currentTimeLabel = this.controlPanel.querySelector('.current-time');
     this.totalTimeLabel = this.controlPanel.querySelector('.total-time');
     this.seekBar = this.controlPanel.querySelector('.seek-bar');
+  }
+
+  connectedCallback() {
+    if (this.domInitialized) {
+      return;
+    }
+    this.domInitialized = true;
+
+    const applyFocusVisiblePolyfill =
+      (window as any).applyFocusVisiblePolyfill as (scope: Document | ShadowRoot) => void;
+    if (applyFocusVisiblePolyfill != null) {
+      applyFocusVisiblePolyfill(this.shadowRoot);
+    }
 
     this.playButton.addEventListener('click', () => {
       if (this.player.isPlaying()) {

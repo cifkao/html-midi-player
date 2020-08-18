@@ -1,5 +1,5 @@
 # html-midi-player
-`<midi-player>` and `<midi-visualizer>` HTML elements powered by [@magenta/music](https://github.com/magenta/magenta-js/tree/master/music/), fully stylable and scriptable.
+`<midi-player>` and `<midi-visualizer>` HTML elements powered by [@magenta/music](https://github.com/magenta/magenta-js/tree/master/music/) (Magenta.js), fully stylable and scriptable.
 
 ## Getting started
 
@@ -56,7 +56,7 @@ player.soundFont = null;  // no SoundFont
 player.soundFont = '';    // default SoundFont (same as below)
 player.soundFont = 'https://storage.googleapis.com/magentadata/js/soundfonts/sgm_plus';
 ```
-See the [Magenta docs](https://magenta.github.io/magenta-js/music/index.html#soundfonts) for a list of available SoundFonts.
+See the [Magenta.js docs](https://magenta.github.io/magenta-js/music/index.html#soundfonts) for a list of available SoundFonts.
 
 ### Visualizer types
 The visualizer type is specified via the `type` attribute. Three visualizer types are supported: `piano-roll`, `waterfall` and `staff`.
@@ -71,3 +71,8 @@ player.addVisualizer(document.getElementById('myVisualizer'));
 player.addVisualizer(document.getElementById('myOtherVisualizer'));
 ```
 The visualizer only gets updated while the player is playing, which allows a single visualizer to be bound to multiple players.
+
+## Limitations
+- Only one player can play at a time due to the way playback is implemented in Magenta.js. Starting a player will stop any other player which is currently playing.
+- Seeking only works while playing. This is related to the first issue and caused by the same problem in Magenta.js.
+- Playback position only gets updated on note onsets. This may cause the player to appear stuck.

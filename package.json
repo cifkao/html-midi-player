@@ -4,17 +4,10 @@
   "author": "Ondřej Cífka",
   "scripts": {
     "prebuild": "rm -rf dist",
-    "build": "webpack"
+    "build": "webpack --config webpack.prod.js",
+    "dev-build": "webpack --config webpack.dev.js"
   },
   "main": "dist/index.js",
-  "targets": {
-    "main": {
-      "includeNodeModules": false,
-      "engines": {
-        "browsers": "supports audio-api and supports custom-elementsv1 and supports shadowdomv1 and supports async-functions"
-      }
-    }
-  },
   "devDependencies": {
     "css-loader": "^4.2.1",
     "focus-visible": "^5.1.0",
@@ -26,7 +19,8 @@
     "typescript": "^3.9.7",
     "url-loader": "^4.1.0",
     "webpack": "^4.44.1",
-    "webpack-cli": "^3.3.12"
+    "webpack-cli": "^3.3.12",
+    "webpack-merge": "^5.1.2"
   },
   "dependencies": {
     "@magenta/music": "^1.19.0"

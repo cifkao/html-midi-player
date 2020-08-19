@@ -1,9 +1,9 @@
 // @ts-ignore
-import playIcon from 'data-url:./assets/play.svg';
+import playIcon from 'url-loader!./assets/play.svg';
 // @ts-ignore
-import stopIcon from 'data-url:./assets/stop.svg';
+import stopIcon from 'url-loader!./assets/stop.svg';
 // @ts-ignore
-import controlsCSS from 'bundle-text:./assets/controls.scss';
+import controlsCSS from 'raw-loader!sass-loader!./assets/controls.scss';
 
 export const controlsTemplate = document.createElement('template');
 controlsTemplate.innerHTML = `

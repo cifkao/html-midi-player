@@ -4,8 +4,7 @@
   "author": "Ondřej Cífka",
   "scripts": {
     "prebuild": "rm -rf dist",
-    "build": "parcel build --target main --no-scope-hoist index.ts",
-    "serve": "parcel serve index.html"
+    "build": "webpack"
   },
   "main": "dist/index.js",
   "targets": {
@@ -17,12 +16,17 @@
     }
   },
   "devDependencies": {
-    "@parcel/transformer-typescript-tsc": "2.0.0-nightly.366",
-    "@parcel/validator-typescript": "2.0.0-nightly.366",
+    "css-loader": "^4.2.1",
     "focus-visible": "^5.1.0",
-    "parcel": "^2.0.0-nightly.366",
+    "raw-loader": "^4.0.1",
     "sass": "^1.26.10",
-    "typescript": "^3.9.7"
+    "sass-loader": "^9.0.3",
+    "style-loader": "^1.2.1",
+    "ts-loader": "^8.0.2",
+    "typescript": "^3.9.7",
+    "url-loader": "^4.1.0",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12"
   },
   "dependencies": {
     "@magenta/music": "^1.19.0"

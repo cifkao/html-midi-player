@@ -37,7 +37,7 @@
 
   button {
     text-align: center;
-    background: #ccc0;
+    background: rgba(#ccc, 0);
     border: none;
     width: 32px;
     height: 32px;
@@ -46,11 +46,11 @@
     padding: 0;
 
     &:not(:disabled):hover {
-      background: #ccc5;
+      background: rgba(#ccc, 0.3);
     }
 
     &:active {
-      background: #ccca;
+      background: rgba(#ccc, 0.6);
     }
   }
 

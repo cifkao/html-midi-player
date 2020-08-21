@@ -1,9 +1,7 @@
-// @ts-ignore
-import playIcon from 'url-loader!./assets/play.svg';
-// @ts-ignore
-import stopIcon from 'url-loader!./assets/stop.svg';
-// @ts-ignore
-import controlsCSS from 'raw-loader!sass-loader!./assets/controls.scss';
+/// <reference path="imports.d.ts"/>
+import playIcon from './play.svg';
+import stopIcon from './stop.svg';
+import controlsCSS from './controls.scss';
 
 export const controlsTemplate = document.createElement('template');
 controlsTemplate.innerHTML = `

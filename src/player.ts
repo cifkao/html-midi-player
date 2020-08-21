@@ -1,7 +1,7 @@
 import * as mm from '@magenta/music/es6/core';
 import {NoteSequence, INoteSequence} from '@magenta/music/es6/protobuf';
 
-import {controlsTemplate} from './templates';
+import {controlsTemplate} from './assets';
 import * as utils from './utils';
 import {VisualizerElement} from './visualizer';
 

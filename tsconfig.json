@@ -14,14 +14,13 @@
     "module": "es6",
     "moduleResolution": "node",
     "lib": [
-      "dom",
       "es6",
+      "dom",
       "dom.iterable",
       "scripthost"
     ]
   },
   "include": [
-    "index.ts",
     "src/**/*"
   ],
   "exclude": [

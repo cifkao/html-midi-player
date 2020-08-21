@@ -1,7 +1,21 @@
 {
   "name": "html-midi-player",
+  "description": "MIDI file player and visualizer web components",
   "version": "0.0.1",
   "author": "Ondřej Cífka",
+  "license": "BSD-2-Clause",
+  "homepage": "https://github.com/cifkao/html-midi-player#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cifkao/html-midi-player.git"
+  },
+  "bugs": {
+    "url": "https://github.com/cifkao/html-midi-player/issues"
+  },
+  "keywords": [
+    "midi", "midi-file", "player", "music", "html", "soundfont", "web-components", "webcomponents"
+  ],
+
   "type": "module",
   "main": "dist/esm/index.js",
   "module": "dist/esm/index.js",

@@ -3,7 +3,7 @@ import {NoteSequence, INoteSequence} from '@magenta/music/es6/protobuf';
 
 
 const VISUALIZER_TYPES = ['piano-roll', 'pianoroll', 'waterfall', 'staff'] as const;
-type VisualizerString = typeof VISUALIZER_TYPES[number];
+type VisualizerType = typeof VISUALIZER_TYPES[number];
 type Visualizer = mm.PianoRollSVGVisualizer | mm.WaterfallSVGVisualizer | mm.StaffSVGVisualizer;
 
 
@@ -14,7 +14,8 @@ export class VisualizerElement extends HTMLElement {
 
   protected ns: INoteSequence;
   protected _src: string;
-  protected _type: VisualizerString = 'pianoroll';
+  protected _type: VisualizerType = 'pianoroll';
+  protected _config: mm.VisualizerConfig = {};
 
   static get observedAttributes() { return ['src', 'type']; }
 
@@ -38,7 +39,7 @@ export class VisualizerElement extends HTMLElement {
     if (name === 'src') {
       this.src = newValue;
     } else if (name === 'type') {
-      this.type = newValue as VisualizerString;
+      this.type = newValue as VisualizerType;
     }
   }
 
@@ -60,15 +61,15 @@ export class VisualizerElement extends HTMLElement {
       this.wrapper.classList.add('piano-roll-visualizer');
       const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
       this.wrapper.appendChild(svg);
-      this.visualizer = new mm.PianoRollSVGVisualizer(this.ns, svg);
+      this.visualizer = new mm.PianoRollSVGVisualizer(this.ns, svg, this._config);
     } else if (this._type === 'waterfall') {
       this.wrapper.classList.add('waterfall-visualizer');
-      this.visualizer = new mm.WaterfallSVGVisualizer(this.ns, this.wrapper);
+      this.visualizer = new mm.WaterfallSVGVisualizer(this.ns, this.wrapper, this._config);
     } else if (this._type === 'staff') {
       this.wrapper.classList.add('staff-visualizer');
       const div = document.createElement('div');
       this.wrapper.appendChild(div);
-      this.visualizer = new mm.StaffSVGVisualizer(this.ns, div);
+      this.visualizer = new mm.StaffSVGVisualizer(this.ns, div, this._config);
     }
   }
 
@@ -107,12 +108,21 @@ export class VisualizerElement extends HTMLElement {
     return this._type;
   }
 
-  set type(value: VisualizerString) {
+  set type(value: VisualizerType) {
     if (VISUALIZER_TYPES.indexOf(value) < 0) {
       throw new Error(
         `Unknown visualizer type ${value}. Allowed values: ${VISUALIZER_TYPES.join(', ')}`);
     }
     this._type = value;
+    this.initVisualizer();
+  }
+
+  get config() {
+    return this._config;
+  }
+
+  set config(value: mm.VisualizerConfig) {
+    this._config = value;
     this.initVisualizer();
   }
 }

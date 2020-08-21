@@ -6,7 +6,7 @@ import * as utils from './utils';
 import {VisualizerElement} from './visualizer';
 
 
-export type NoteEvent = CustomEvent<{note: NoteSequence.Note}>;
+export type NoteEvent = CustomEvent<{note: NoteSequence.INote}>;
 const VISUALIZER_EVENTS = ['start', 'stop', 'note'] as const;
 const DEFAULT_SOUNDFONT = 'https://storage.googleapis.com/magentadata/js/soundfonts/sgm_plus';
 
@@ -23,7 +23,7 @@ export class PlayerElement extends HTMLElement {
   protected totalTimeLabel: HTMLInputElement;
   protected visualizerListeners = new Map<VisualizerElement, {[name: string]: EventListener}>();
 
-  protected ns: NoteSequence;
+  protected ns: INoteSequence;
   protected _src: string;
   protected _soundFont: string;
   protected _playing = false;
@@ -111,7 +111,7 @@ export class PlayerElement extends HTMLElement {
     this.stop();
     this.freeze();
 
-    let ns: NoteSequence = null;
+    let ns: INoteSequence = null;
     if (initNs) {
       if (this._src) {
         this.ns = null;
@@ -264,7 +264,7 @@ export class PlayerElement extends HTMLElement {
   }
 
   set noteSequence(value: INoteSequence) {
-    this.ns = NoteSequence.create(value);
+    this.ns = value;
     this._src = null;
     this.initPlayer();
   }

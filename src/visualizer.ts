@@ -12,7 +12,7 @@ export class VisualizerElement extends HTMLElement {
   protected wrapper: HTMLDivElement;
   protected visualizer: Visualizer;
 
-  protected ns: NoteSequence;
+  protected ns: INoteSequence;
   protected _src: string;
   protected _type: VisualizerString = 'pianoroll';
 
@@ -89,7 +89,7 @@ export class VisualizerElement extends HTMLElement {
   }
 
   set noteSequence(value: INoteSequence) {
-    this.ns = NoteSequence.create(value);
+    this.ns = value;
     this._src = null;
     this.initVisualizer();
   }

@@ -8,7 +8,9 @@ type Visualizer = mm.PianoRollSVGVisualizer | mm.WaterfallSVGVisualizer | mm.Sta
 
 
 export class VisualizerElement extends HTMLElement {
-  protected domInitialized = false;
+  private domInitialized = false;
+  private initTimeout: number;
+
   protected wrapper: HTMLDivElement;
   protected visualizer: Visualizer;
 
@@ -28,7 +30,7 @@ export class VisualizerElement extends HTMLElement {
     this.wrapper = document.createElement('div');
     this.appendChild(this.wrapper);
 
-    this.initVisualizer();
+    this.initVisualizerNow();
   }
 
   attributeChangedCallback(name: string, _oldValue: string, newValue: string) {
@@ -43,7 +45,14 @@ export class VisualizerElement extends HTMLElement {
     }
   }
 
-  protected async initVisualizer() {
+  protected initVisualizer() {
+    if (this.initTimeout == null) {
+      this.initTimeout = window.setTimeout(() => this.initVisualizerNow());
+    }
+  }
+
+  protected async initVisualizerNow() {
+    this.initTimeout = null;
     if (!this.domInitialized) {
       return;
     }

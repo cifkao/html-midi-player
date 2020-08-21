@@ -14,7 +14,10 @@ let playingPlayer: PlayerElement = null;
 
 
 export class PlayerElement extends HTMLElement {
-  protected domInitialized = false;
+  private domInitialized = false;
+  private initTimeout: number;
+  private needInitNs = false;
+
   protected player: mm.BasePlayer;
   protected controlPanel: HTMLElement;
   protected playButton: HTMLButtonElement;
@@ -81,7 +84,7 @@ export class PlayerElement extends HTMLElement {
       }
     });
 
-    this.initPlayer();
+    this.initPlayerNow();
   }
 
   attributeChangedCallback(name: string, _oldValue: string, newValue: string) {
@@ -103,13 +106,21 @@ export class PlayerElement extends HTMLElement {
     }
   }
 
-  protected async initPlayer(initNs = true) {
+  protected initPlayer(initNs = true) {
+    this.needInitNs = this.needInitNs || initNs;
+    if (this.initTimeout == null) {
+      this.stop();
+      this.freeze();
+      this.initTimeout = window.setTimeout(() => this.initPlayerNow(this.needInitNs));
+    }
+  }
+
+  protected async initPlayerNow(initNs = true) {
+    this.initTimeout = null;
+    this.needInitNs = false;
     if (!this.domInitialized) {
       return;
     }
-
-    this.stop();
-    this.freeze();
 
     let ns: INoteSequence = null;
     if (initNs) {

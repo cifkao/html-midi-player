@@ -13,9 +13,15 @@
     "url": "https://github.com/cifkao/html-midi-player/issues"
   },
   "keywords": [
-    "midi", "midi-file", "player", "music", "html", "soundfont", "web-components", "webcomponents"
+    "midi",
+    "midi-file",
+    "player",
+    "music",
+    "html",
+    "soundfont",
+    "web-components",
+    "webcomponents"
   ],
-
   "type": "module",
   "main": "dist/esm/index.js",
   "module": "dist/esm/index.js",
@@ -35,7 +41,6 @@
     "rollup-plugin-sass": "^1.2.2",
     "rollup-plugin-terser": "^7.0.0",
     "sass": "^1.26.10",
-    "style-loader": "^1.2.1",
     "tslib": "^2.0.1",
     "typescript": "^3.9.7"
   },

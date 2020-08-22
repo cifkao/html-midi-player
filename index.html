@@ -8,14 +8,38 @@
     <script src="https://cdn.jsdelivr.net/npm/@magenta/music@1/es6/core.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/focus-visible@5/dist/focus-visible.min.js"></script>
     <script src="./dist/midi-player.min.js"></script>
+
+    <style>
+      #player2::part(control-panel) {
+        background: #ff5;
+        border: 2px solid #000;
+        border-radius: 10px;
+      }
+    </style>
   </head>
   <body>
-    <midi-player src="https://magenta.github.io/magenta-js/music/demos/melody.mid" sound-font visualizer=".visualizer"></midi-player>
-    <midi-player src="https://magenta.github.io/magenta-js/music/demos/melody.mid" sound-font visualizer=".visualizer"></midi-player>
-    <midi-player src="https://magenta.github.io/magenta-js/music/demos/melody.mid" sound-font visualizer=".visualizer"></midi-player>
+    <h1><a href="https://github.com/cifkao/html-midi-player">HTML MIDI Player</a></h1>
+
+    <midi-player src="https://magenta.github.io/magenta-js/music/demos/melody.mid" sound-font visualizer=".visualizer" id="player1"></midi-player>
+    <midi-player src="https://magenta.github.io/magenta-js/music/demos/melody.mid" visualizer=".visualizer" id="player2"></midi-player>
   
-    <midi-visualizer type="piano-roll" class="visualizer"></midi-visualizer>
-    <midi-visualizer type="waterfall" class="visualizer"></midi-visualizer>
-    <midi-visualizer type="staff" class="visualizer"></midi-visualizer>
+    <midi-visualizer type="piano-roll" class="visualizer" id="pianoRollVisualizer"></midi-visualizer>
+    <midi-visualizer type="waterfall" class="visualizer" id="waterfallVisualizer"></midi-visualizer>
+    <midi-visualizer type="staff" class="visualizer" id="staffVisualizer"></midi-visualizer>
+
+    <script>
+      window.addEventListener('DOMContentLoaded', function() {
+        for (const player of document.querySelectorAll('midi-player')) {
+          player.addEventListener('load', console.log);
+          player.addEventListener('start', console.log);
+          player.addEventListener('stop', console.log);
+        }
+
+        const waterfallVisualizer = document.querySelector('#waterfallVisualizer');
+        waterfallVisualizer.config = {
+          showOnlyOctavesUsed: true
+        };
+      });
+    </script>
   </body>
 </html>

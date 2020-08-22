@@ -291,6 +291,9 @@ export class PlayerElement extends HTMLElement {
     this.initPlayer();
   }
 
+  /**
+   * @attr sound-font
+   */
   get soundFont() {
     return this.getAttribute('sound-font');
   }

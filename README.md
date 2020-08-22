@@ -29,7 +29,9 @@
 That's it!
 
 
-## Usage
+## API basics
+
+See also the API reference for both elements: [`midi-player`](doc/midi-player.md), [`midi-visualizer`](doc/midi-visualizer.md).
 
 ### `src` and `noteSequence`
 Both `midi-player` and `midi-visualizer` support two different ways of specifying the input file:

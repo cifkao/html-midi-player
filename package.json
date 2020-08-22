@@ -30,7 +30,8 @@
     "prebuild": "rm -rf dist",
     "build": "rollup -c && tsc -d --emitDeclarationOnly --declarationDir dist/esm",
     "prestart": "rm -rf dist",
-    "start": "rollup -c --watch --plugin dev"
+    "start": "rollup -c --watch --plugin dev",
+    "build:doc": "wca src/index.ts --outFiles doc/{tagname}.md"
   },
   "devDependencies": {
     "@rollup/plugin-typescript": "^5.0.2",
@@ -42,7 +43,8 @@
     "rollup-plugin-terser": "^7.0.0",
     "sass": "^1.26.10",
     "tslib": "^2.0.1",
-    "typescript": "^3.9.7"
+    "typescript": "^3.9.7",
+    "web-component-analyzer": "^1.1.6"
   },
   "dependencies": {
     "@magenta/music": "^1.19.0"

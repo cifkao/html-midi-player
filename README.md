@@ -32,8 +32,8 @@ That's it!
 ## API basics
 
 See also the API reference for both elements:
-[`midi-player`](https://github.com/cifkao/html-midi-player/blob/master/doc/midi-player.md),
-[`midi-visualizer`](https://github.com/cifkao/html-midi-player/blob/master/doc/midi-visualizer.md).
+[`midi-player`](https://github.com/cifkao/html-midi-player/blob/master/doc/midi-player.md#midi-player),
+[`midi-visualizer`](https://github.com/cifkao/html-midi-player/blob/master/doc/midi-visualizer.md#midi-visualizer).
 
 ### `src` and `noteSequence`
 Both `midi-player` and `midi-visualizer` support two different ways of specifying the input file:

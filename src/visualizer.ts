@@ -52,11 +52,12 @@ export class VisualizerElement extends HTMLElement {
       this.ns = null;
       this.ns = await mm.urlToNoteSequence(this.src);
     }
+
+    this.wrapper.innerHTML = '';
+
     if (!this.ns) {
       return;
     }
-
-    this.wrapper.innerHTML = '';
 
     if (this.type === 'piano-roll') {
       this.wrapper.classList.add('piano-roll-visualizer');
@@ -92,7 +93,7 @@ export class VisualizerElement extends HTMLElement {
 
   set noteSequence(value: INoteSequence) {
     this.ns = value;
-    this.removeAttribute('src');
+    this.removeAttribute('src');  // Triggers initVisualizer only if src was present.
     this.initVisualizer();
   }
 
@@ -101,7 +102,8 @@ export class VisualizerElement extends HTMLElement {
   }
 
   set src(value: string) {
-    this.setOrRemoveAttribute('src', value);
+    this.ns = null;
+    this.setOrRemoveAttribute('src', value);  // Triggers initVisualizer only if src was present.
     this.initVisualizer();
   }
 

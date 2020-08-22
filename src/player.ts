@@ -125,12 +125,15 @@ export class PlayerElement extends HTMLElement {
         this.ns = await mm.urlToNoteSequence(this.src);
       }
       this.currentTime = 0;
-      this.seekBar.max = String(this.ns.totalTime);
-      this.totalTimeLabel.textContent = utils.formatTime(this.ns.totalTime);
     }
     ns = this.ns;
 
-    if (!ns) {
+    if (ns) {
+      this.seekBar.max = String(ns.totalTime);
+      this.totalTimeLabel.textContent = utils.formatTime(ns.totalTime);
+    } else {
+      this.seekBar.max = '0';
+      this.totalTimeLabel.textContent = utils.formatTime(0);
       return;
     }
 
@@ -274,7 +277,8 @@ export class PlayerElement extends HTMLElement {
 
   set noteSequence(value: INoteSequence) {
     this.ns = value;
-    this.removeAttribute('src');  // triggers init
+    this.removeAttribute('src');  // Triggers initPlayer only if src was present.
+    this.initPlayer();
   }
 
   get src() {
@@ -282,7 +286,9 @@ export class PlayerElement extends HTMLElement {
   }
 
   set src(value: string) {
-    this.setOrRemoveAttribute('src', value);
+    this.ns = null;
+    this.setOrRemoveAttribute('src', value);  // Triggers initPlayer only if src was present.
+    this.initPlayer();
   }
 
   get soundFont() {

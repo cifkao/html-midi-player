@@ -46,13 +46,5 @@
   },
   "dependencies": {
     "@magenta/music": "^1.19.0"
-  },
-  "alias": {
-    "@magenta/music/es6/core": {
-      "global": "core"
-    },
-    "@magenta/music/es6/protobuf": {
-      "global": "protobuf"
-    }
   }
 }

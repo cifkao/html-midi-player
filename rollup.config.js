@@ -9,8 +9,7 @@ const umdOptions = {
   format: 'umd',
   name: 'midiPlayer',
   globals: {
-    '@magenta/music/es6/core': 'core',
-    '@magenta/music/es6/protobuf': 'protobuf'
+    '@magenta/music/es6/core': 'core'
   }
 };
 
@@ -39,7 +38,6 @@ export default {
     }),
   ],
   external: [
-    '@magenta/music/es6/core',  
-    '@magenta/music/es6/protobuf',  
+    '@magenta/music/es6/core'
   ]
 }

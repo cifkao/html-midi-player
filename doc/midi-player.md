@@ -1,21 +1,24 @@
 # midi-player
 
+MIDI player element.
+See also the [`@magenta/music/core/player` docs](https://magenta.github.io/magenta-js/music/modules/_core_player_.html).
+
 ## Attributes
 
-| Attribute    |
-|--------------|
-| `visualizer` |
+| Attribute    | Description                                      |
+|--------------|--------------------------------------------------|
+| `visualizer` | A selector matching `midi-visualizer` elements to bind to this player |
 
 ## Properties
 
-| Property       | Attribute    | Modifiers | Type            |
-|----------------|--------------|-----------|-----------------|
-| `currentTime`  |              |           | `number`        |
-| `duration`     |              | readonly  | `number`        |
-| `noteSequence` |              |           | `INoteSequence` |
-| `playing`      |              | readonly  | `boolean`       |
-| `soundFont`    | `sound-font` |           | `string`        |
-| `src`          | `src`        |           | `string`        |
+| Property       | Attribute    | Type                    | Description                                      |
+|----------------|--------------|-------------------------|--------------------------------------------------|
+| `currentTime`  |              | `number`                | Current playback position in seconds             |
+| `duration`     |              | `number`                | Content duration in seconds                      |
+| `noteSequence` |              | `INoteSequence \| null` | Magenta note sequence object representing the currently loaded content |
+| `playing`      |              | `boolean`               | Indicates whether the player is currently playing |
+| `soundFont`    | `sound-font` | `string \| null`        | Magenta SoundFont URL, an empty string to use the default SoundFont, or `null` to use a simple oscillator synth |
+| `src`          | `src`        | `string \| null`        | MIDI file URL                                    |
 
 ## Methods
 
@@ -28,9 +31,9 @@
 
 ## Events
 
-| Event   | Type                                  |
-|---------|---------------------------------------|
-| `load`  |                                       |
-| `note`  | `CustomEvent<{ note: INote; }>`       |
-| `start` |                                       |
-| `stop`  | `CustomEvent<{ finished: boolean; }>` |
+| Event   | Type                                  | Description                             |
+|---------|---------------------------------------|-----------------------------------------|
+| `load`  |                                       | The content is loaded and ready to play |
+| `note`  | `CustomEvent<{ note: INote; }>`       | A note starts                           |
+| `start` |                                       | The player has started playing          |
+| `stop`  | `CustomEvent<{ finished: boolean; }>` | The player has stopped playing          |

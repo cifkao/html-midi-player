@@ -50,7 +50,7 @@ Both `midi-player` and `midi-visualizer` support two different ways of specifyin
   ```
 
 ### SoundFonts
-By default, the player will use a simple built-in synth. To use a SoundFont, add the `sound-font` attribute:
+By default, the player will use a simple oscillator synth. To use a SoundFont, add the `sound-font` attribute:
 ```html
 <midi-player sound-font></midi-player>  <!-- default SoundFont (same as below) -->
 <midi-player sound-font="https://storage.googleapis.com/magentadata/js/soundfonts/sgm_plus"></midi-player>
@@ -62,8 +62,18 @@ player.soundFont = 'https://storage.googleapis.com/magentadata/js/soundfonts/sgm
 ```
 See the [Magenta.js docs](https://magenta.github.io/magenta-js/music/index.html#soundfonts) for a list of available SoundFonts.
 
-### Visualizer types
+### Visualizer settings
 The visualizer type is specified via the `type` attribute. Three visualizer types are supported: `piano-roll`, `waterfall` and `staff`.
+
+Each visualizer type has a set of settings that can be specified using the `config` attribute, e.g.:
+```javascript
+visualizer.config = {
+  noteHeight: 4,
+  pixelsPerTimeStep: 60,
+  minPitch: 30
+};
+```
+The settings are documented [in the Magenta.js docs](https://magenta.github.io/magenta-js/music/interfaces/_core_visualizer_.visualizerconfig.html).
 
 ### Binding visualizers
 A player supports binding one or more visualizers to it using the `visualizer` attribute (a selector) or the `addVisualizer` method:

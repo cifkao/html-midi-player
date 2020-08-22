@@ -7,6 +7,15 @@ type VisualizerType = typeof VISUALIZER_TYPES[number];
 type Visualizer = mm.PianoRollSVGVisualizer | mm.WaterfallSVGVisualizer | mm.StaffSVGVisualizer;
 
 
+/**
+ * MIDI visualizer element.
+ * See also the [`@magenta/music/core/visualizer` docs](https://magenta.github.io/magenta-js/music/modules/_core_visualizer_.html).
+ *
+ * @prop src - MIDI file URL
+ * @prop type - Visualizer type
+ * @prop noteSequence - Magenta note sequence object representing the currently displayed content
+ * @prop config - Magenta visualizer config object
+ */
 export class VisualizerElement extends HTMLElement {
   private domInitialized = false;
   private initTimeout: number;
@@ -91,7 +100,7 @@ export class VisualizerElement extends HTMLElement {
     return this.ns;
   }
 
-  set noteSequence(value: INoteSequence) {
+  set noteSequence(value: INoteSequence | null) {
     this.ns = value;
     this.removeAttribute('src');  // Triggers initVisualizer only if src was present.
     this.initVisualizer();
@@ -101,7 +110,7 @@ export class VisualizerElement extends HTMLElement {
     return this.getAttribute('src');
   }
 
-  set src(value: string) {
+  set src(value: string | null) {
     this.ns = null;
     this.setOrRemoveAttribute('src', value);  // Triggers initVisualizer only if src was present.
     this.initVisualizer();

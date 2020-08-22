@@ -13,6 +13,23 @@ const DEFAULT_SOUNDFONT = 'https://storage.googleapis.com/magentadata/js/soundfo
 let playingPlayer: PlayerElement = null;
 
 
+/**
+ * MIDI player element.
+ * See also the [`@magenta/music/core/player` docs](https://magenta.github.io/magenta-js/music/modules/_core_player_.html).
+ *
+ * @prop src - MIDI file URL
+ * @prop soundFont - Magenta SoundFont URL, an empty string to use the default SoundFont, or `null` to use a simple oscillator synth
+ * @prop noteSequence - Magenta note sequence object representing the currently loaded content
+ * @prop currentTime - Current playback position in seconds
+ * @prop duration - Content duration in seconds
+ * @prop playing - Indicates whether the player is currently playing
+ * @attr visualizer - A selector matching `midi-visualizer` elements to bind to this player
+ *
+ * @fires load - The content is loaded and ready to play
+ * @fires start - The player has started playing
+ * @fires stop - The player has stopped playing
+ * @fires note - A note starts
+ */
 export class PlayerElement extends HTMLElement {
   private domInitialized = false;
   private initTimeout: number;
@@ -276,7 +293,7 @@ export class PlayerElement extends HTMLElement {
     return this.ns;
   }
 
-  set noteSequence(value: INoteSequence) {
+  set noteSequence(value: INoteSequence | null) {
     this.ns = value;
     this.removeAttribute('src');  // Triggers initPlayer only if src was present.
     this.initPlayer();
@@ -286,7 +303,7 @@ export class PlayerElement extends HTMLElement {
     return this.getAttribute('src');
   }
 
-  set src(value: string) {
+  set src(value: string | null) {
     this.ns = null;
     this.setOrRemoveAttribute('src', value);  // Triggers initPlayer only if src was present.
     this.initPlayer();
@@ -299,7 +316,7 @@ export class PlayerElement extends HTMLElement {
     return this.getAttribute('sound-font');
   }
 
-  set soundFont(value: string) {
+  set soundFont(value: string | null) {
     this.setOrRemoveAttribute('sound-font', value);
   }
 

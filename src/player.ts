@@ -17,6 +17,15 @@ let playingPlayer: PlayerElement = null;
  * MIDI player element.
  * See also the [`@magenta/music/core/player` docs](https://magenta.github.io/magenta-js/music/modules/_core_player_.html).
  *
+ * The element supports styling using the CSS [`::part` syntax](https://developer.mozilla.org/docs/Web/CSS/::part)
+ * (see the list of shadow parts [below](#css-shadow-parts)). For example:
+ * ```css
+ * midi-player::part(control-panel) {
+ *     background: aquamarine;
+ *     border-radius: 0px;
+ * }
+ * ```
+ *
  * @prop src - MIDI file URL
  * @prop soundFont - Magenta SoundFont URL, an empty string to use the default SoundFont, or `null` to use a simple oscillator synth
  * @prop noteSequence - Magenta note sequence object representing the currently loaded content
@@ -29,6 +38,13 @@ let playingPlayer: PlayerElement = null;
  * @fires start - The player has started playing
  * @fires stop - The player has stopped playing
  * @fires note - A note starts
+ *
+ * @csspart control-panel - `<div>` containing all the controls
+ * @csspart play-button - Play button
+ * @csspart time - Numeric time indicator
+ * @csspart current-time - Elapsed time
+ * @csspart total-time - Total duration
+ * @csspart seek-bar - `<input type="range">` showing playback position
  */
 export class PlayerElement extends HTMLElement {
   private domInitialized = false;

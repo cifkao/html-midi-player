@@ -3,6 +3,15 @@
 MIDI player element.
 See also the [`@magenta/music/core/player` docs](https://magenta.github.io/magenta-js/music/modules/_core_player_.html).
 
+The element supports styling using the CSS [`::part` syntax](https://developer.mozilla.org/docs/Web/CSS/::part)
+(see the list of shadow parts [below](#css-shadow-parts)). For example:
+```css
+midi-player::part(control-panel) {
+     background: aquamarine;
+     border-radius: 0px;
+}
+```
+
 ## Attributes
 
 | Attribute    | Description                                      |
@@ -37,3 +46,14 @@ See also the [`@magenta/music/core/player` docs](https://magenta.github.io/magen
 | `note`  | `CustomEvent<{ note: INote; }>`       | A note starts                           |
 | `start` |                                       | The player has started playing          |
 | `stop`  | `CustomEvent<{ finished: boolean; }>` | The player has stopped playing          |
+
+## CSS Shadow Parts
+
+| Part            | Description                                      |
+|-----------------|--------------------------------------------------|
+| `control-panel` | `<div>` containing all the controls              |
+| `current-time`  | Elapsed time                                     |
+| `play-button`   | Play button                                      |
+| `seek-bar`      | `<input type="range">` showing playback position |
+| `time`          | Numeric time indicator                           |
+| `total-time`    | Total duration                                   |

@@ -34,6 +34,10 @@
     "build:doc": "wca src/index.ts --outFiles doc/{tagname}.md"
   },
   "devDependencies": {
+    "@babel/core": "^7.0.0",
+    "@babel/plugin-transform-modules-umd": "^7.10.4",
+    "@babel/preset-env": "^7.11.0",
+    "@rollup/plugin-babel": "^5.2.0",
     "@rollup/plugin-typescript": "^5.0.2",
     "@rollup/plugin-url": "^5.0.1",
     "focus-visible": "^5.1.0",

@@ -229,7 +229,7 @@ export class PlayerElement extends HTMLElement {
     if (this.player && this.player.isPlaying()) {
       this.player.stop();
     }
-    this.handleStop();
+    this.handleStop(false);
   }
 
   addVisualizer(visualizer: VisualizerElement) {
@@ -267,8 +267,10 @@ export class PlayerElement extends HTMLElement {
     }
     this.controlPanel.classList.remove('playing');
     this.controlPanel.classList.add('stopped');
-    this._playing = false;
-    this.dispatchEvent(new CustomEvent('stop', {detail: {finished}}));
+    if (this._playing) {
+      this._playing = false;
+      this.dispatchEvent(new CustomEvent('stop', {detail: {finished}}));
+    }
   }
 
   protected setVisualizerSelector(selector: string) {

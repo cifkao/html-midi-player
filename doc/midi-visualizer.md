@@ -1,7 +1,12 @@
 # midi-visualizer
 
 MIDI visualizer element.
-See also the [`@magenta/music/core/visualizer` docs](https://magenta.github.io/magenta-js/music/modules/_core_visualizer_.html).
+
+The visualizer is implemented via SVG elements which support styling as described
+[here](https://magenta.github.io/magenta-js/music/demos/visualizer.html).
+
+See also the
+[`@magenta/music/core/visualizer` docs](https://magenta.github.io/magenta-js/music/modules/_core_visualizer_.html).
 
 ## Properties
 

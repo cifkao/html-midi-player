@@ -30,6 +30,7 @@
 
 | Event   | Type                                  |
 |---------|---------------------------------------|
+| `load`  |                                       |
 | `note`  | `CustomEvent<{ note: INote; }>`       |
 | `start` |                                       |
 | `stop`  | `CustomEvent<{ finished: boolean; }>` |

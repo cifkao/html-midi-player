@@ -160,6 +160,7 @@ export class PlayerElement extends HTMLElement {
     }
 
     this.unfreeze();
+    this.dispatchEvent(new CustomEvent('load'));
   }
 
   start() {

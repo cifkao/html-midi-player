@@ -2,7 +2,7 @@ import * as mm from '@magenta/music/es6/core';
 import {NoteSequence, INoteSequence} from '@magenta/music/es6/protobuf';
 
 
-const VISUALIZER_TYPES = ['piano-roll', 'pianoroll', 'waterfall', 'staff'] as const;
+const VISUALIZER_TYPES = ['piano-roll', 'waterfall', 'staff'] as const;
 type VisualizerType = typeof VISUALIZER_TYPES[number];
 type Visualizer = mm.PianoRollSVGVisualizer | mm.WaterfallSVGVisualizer | mm.StaffSVGVisualizer;
 
@@ -15,8 +15,6 @@ export class VisualizerElement extends HTMLElement {
   protected visualizer: Visualizer;
 
   protected ns: INoteSequence;
-  protected _src: string;
-  protected _type: VisualizerType = 'pianoroll';
   protected _config: mm.VisualizerConfig = {};
 
   static get observedAttributes() { return ['src', 'type']; }
@@ -33,15 +31,9 @@ export class VisualizerElement extends HTMLElement {
     this.initVisualizerNow();
   }
 
-  attributeChangedCallback(name: string, _oldValue: string, newValue: string) {
-    if (!this.hasAttribute(name)) {
-      newValue = null;
-    }
-
-    if (name === 'src') {
-      this.src = newValue;
-    } else if (name === 'type') {
-      this.type = newValue as VisualizerType;
+  attributeChangedCallback(name: string, _oldValue: string, _newValue: string) {
+    if (name === 'src' || name === 'type') {
+      this.initVisualizer();
     }
   }
 
@@ -56,9 +48,9 @@ export class VisualizerElement extends HTMLElement {
     if (!this.domInitialized) {
       return;
     }
-    if (this._src) {
+    if (this.src) {
       this.ns = null;
-      this.ns = await mm.urlToNoteSequence(this._src);
+      this.ns = await mm.urlToNoteSequence(this.src);
     }
     if (!this.ns) {
       return;
@@ -66,15 +58,15 @@ export class VisualizerElement extends HTMLElement {
 
     this.wrapper.innerHTML = '';
 
-    if (this._type === 'piano-roll' || this._type === 'pianoroll') {
+    if (this.type === 'piano-roll') {
       this.wrapper.classList.add('piano-roll-visualizer');
       const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
       this.wrapper.appendChild(svg);
       this.visualizer = new mm.PianoRollSVGVisualizer(this.ns, svg, this._config);
-    } else if (this._type === 'waterfall') {
+    } else if (this.type === 'waterfall') {
       this.wrapper.classList.add('waterfall-visualizer');
       this.visualizer = new mm.WaterfallSVGVisualizer(this.ns, this.wrapper, this._config);
-    } else if (this._type === 'staff') {
+    } else if (this.type === 'staff') {
       this.wrapper.classList.add('staff-visualizer');
       const div = document.createElement('div');
       this.wrapper.appendChild(div);
@@ -100,30 +92,33 @@ export class VisualizerElement extends HTMLElement {
 
   set noteSequence(value: INoteSequence) {
     this.ns = value;
-    this._src = null;
+    this.removeAttribute('src');
     this.initVisualizer();
   }
 
   get src() {
-    return this._src;
+    return this.getAttribute('src');
   }
 
   set src(value: string) {
-    this._src = value;
+    this.setOrRemoveAttribute('src', value);
     this.initVisualizer();
   }
 
   get type() {
-    return this._type;
+    let value = this.getAttribute('type');
+    if ((VISUALIZER_TYPES as readonly string[]).indexOf(value) < 0) {
+      value = 'piano-roll';
+    }
+    return value as VisualizerType;
   }
 
   set type(value: VisualizerType) {
-    if (VISUALIZER_TYPES.indexOf(value) < 0) {
+    if (value != null && VISUALIZER_TYPES.indexOf(value) < 0) {
       throw new Error(
         `Unknown visualizer type ${value}. Allowed values: ${VISUALIZER_TYPES.join(', ')}`);
     }
-    this._type = value;
-    this.initVisualizer();
+    this.setOrRemoveAttribute('type', value);
   }
 
   get config() {
@@ -133,5 +128,13 @@ export class VisualizerElement extends HTMLElement {
   set config(value: mm.VisualizerConfig) {
     this._config = value;
     this.initVisualizer();
+  }
+
+  protected setOrRemoveAttribute(name: string, value: string) {
+    if (value == null) {
+      this.removeAttribute(name);
+    } else {
+      this.setAttribute(name, value);
+    }
   }
 }

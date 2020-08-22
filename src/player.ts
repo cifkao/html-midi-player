@@ -27,8 +27,6 @@ export class PlayerElement extends HTMLElement {
   protected visualizerListeners = new Map<VisualizerElement, {[name: string]: EventListener}>();
 
   protected ns: INoteSequence;
-  protected _src: string;
-  protected _soundFont: string;
   protected _playing = false;
 
   static get observedAttributes() { return ['sound-font', 'src', 'visualizer']; }
@@ -92,10 +90,8 @@ export class PlayerElement extends HTMLElement {
       newValue = null;
     }
 
-    if (name === 'sound-font') {
-      this.soundFont = newValue;
-    } else if (name === 'src') {
-      this.src = newValue;
+    if (name === 'sound-font' || name === 'src') {
+      this.initPlayer();
     } else if (name === 'visualizer') {
       const fn = () => { this.setVisualizerSelector(newValue); };
       if (document.readyState === 'loading') {
@@ -124,9 +120,9 @@ export class PlayerElement extends HTMLElement {
 
     let ns: INoteSequence = null;
     if (initNs) {
-      if (this._src) {
+      if (this.src) {
         this.ns = null;
-        this.ns = await mm.urlToNoteSequence(this._src);
+        this.ns = await mm.urlToNoteSequence(this.src);
       }
       this.currentTime = 0;
       this.seekBar.max = String(this.ns.totalTime);
@@ -138,7 +134,7 @@ export class PlayerElement extends HTMLElement {
       return;
     }
 
-    var soundFont = this._soundFont;
+    let soundFont = this.soundFont;
     const callbackObject = {
       // Call callbacks only if we are still playing the same note sequence.
       run: (n: NoteSequence.INote) => (this.ns === ns) && this.noteCallback(n),
@@ -248,13 +244,15 @@ export class PlayerElement extends HTMLElement {
     this.visualizerListeners.clear();
 
     // Match visualizers and add them as listeners
-    for (const element of document.querySelectorAll(selector)) {
-      if (!(element instanceof VisualizerElement)) {
-        console.warn(`Selector ${selector} matched non-visualizer element`, element);
-        continue;
-      }
+    if (selector != null) {
+      for (const element of document.querySelectorAll(selector)) {
+        if (!(element instanceof VisualizerElement)) {
+          console.warn(`Selector ${selector} matched non-visualizer element`, element);
+          continue;
+        }
 
-      this.addVisualizer(element);
+        this.addVisualizer(element);
+      }
     }
   }
 
@@ -276,26 +274,23 @@ export class PlayerElement extends HTMLElement {
 
   set noteSequence(value: INoteSequence) {
     this.ns = value;
-    this._src = null;
-    this.initPlayer();
+    this.removeAttribute('src');  // triggers init
   }
 
   get src() {
-    return this._src;
+    return this.getAttribute('src');
   }
 
   set src(value: string) {
-    this._src = value;
-    this.initPlayer();
+    this.setOrRemoveAttribute('src', value);
   }
 
   get soundFont() {
-    return this._soundFont;
+    return this.getAttribute('sound-font');
   }
 
   set soundFont(value: string) {
-    this._soundFont = value;
-    this.initPlayer(false);
+    this.setOrRemoveAttribute('sound-font', value);
   }
 
   get currentTime() {
@@ -316,5 +311,13 @@ export class PlayerElement extends HTMLElement {
 
   get playing() {
     return this._playing;
+  }
+
+  protected setOrRemoveAttribute(name: string, value: string) {
+    if (value == null) {
+      this.removeAttribute(name);
+    } else {
+      this.setAttribute(name, value);
+    }
   }
 }

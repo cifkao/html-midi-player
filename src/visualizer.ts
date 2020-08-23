@@ -28,7 +28,7 @@ export class VisualizerElement extends HTMLElement {
   protected wrapper: HTMLDivElement;
   protected visualizer: Visualizer;
 
-  protected ns: INoteSequence;
+  protected ns: INoteSequence = null;
   protected _config: mm.VisualizerConfig = {};
 
   static get observedAttributes() { return ['src', 'type']; }

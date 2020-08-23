@@ -59,7 +59,7 @@ export class PlayerElement extends HTMLElement {
   protected totalTimeLabel: HTMLInputElement;
   protected visualizerListeners = new Map<VisualizerElement, {[name: string]: EventListener}>();
 
-  protected ns: INoteSequence;
+  protected ns: INoteSequence = null;
   protected _playing = false;
 
   static get observedAttributes() { return ['sound-font', 'src', 'visualizer']; }

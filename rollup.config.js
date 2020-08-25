@@ -40,6 +40,7 @@ export default {
     },
     {
       file: 'dist/midi-player.min.js',
+      sourcemap: true,
       ...umdOptions,
       plugins: [...umdPlugins, terser()]
     },

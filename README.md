@@ -1,6 +1,8 @@
 # html-midi-player
 
-[![npm version](https://badge.fury.io/js/html-midi-player.svg)](https://badge.fury.io/js/html-midi-player) [![](https://data.jsdelivr.com/v1/package/npm/html-midi-player/badge?style=rounded)](https://www.jsdelivr.com/package/npm/html-midi-player)
+[![npm package](https://badge.fury.io/js/html-midi-player.svg)](https://badge.fury.io/js/html-midi-player)
+[![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/html-midi-player) 
+[![jsDelivr](https://data.jsdelivr.com/v1/package/npm/html-midi-player/badge?style=rounded)](https://www.jsdelivr.com/package/npm/html-midi-player)
 
 `<midi-player>` and `<midi-visualizer>` HTML elements powered by [@magenta/music](https://github.com/magenta/magenta-js/tree/master/music/) (Magenta.js), fully stylable and scriptable.
 

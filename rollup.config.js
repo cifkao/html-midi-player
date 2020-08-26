@@ -2,57 +2,90 @@ import sass from 'rollup-plugin-sass';
 import typescript from '@rollup/plugin-typescript';
 import { terser } from 'rollup-plugin-terser';
 import url from '@rollup/plugin-url';
-import { getBabelOutputPlugin } from '@rollup/plugin-babel';
+import babel from '@rollup/plugin-babel';
 
 import pkg from './package.json';
 
-const umdOptions = {
-  format: 'esm',
+const banner =
+`/**
+ * ${pkg.name}@${pkg.version}
+ * ${pkg.repository.url}
+ * @author ${pkg.author} (@cifkao)
+ * @license ${pkg.license}
+ */
+`;
+
+const commonPlugins = [
+  sass(),
+  url({
+    include: ['src/assets/**/*.svg']
+  }),
+];
+
+const umdOutOptions = {
+  format: 'umd',
   name: 'midiPlayer',
   globals: {
     '@magenta/music/es6/core': 'core'
-  }
+  },
+  banner: banner
 };
-const umdPlugins = [
-  getBabelOutputPlugin({
-    presets: [
-      [
-        '@babel/preset-env', {
-          targets: 'supports audio-api and supports custom-elementsv1 and supports shadowdomv1 and supports async-functions'
-        }
-      ],
-    ],
-    plugins: ['@babel/plugin-transform-modules-umd'],
-  })
-];
 
-export default {
-  input: 'src/index.ts',
-  output: [
-    {
+export default [
+  {
+    input: 'src/index.ts',
+    output: {
       file: pkg.module,
-      format: 'es'
+      format: 'es',
+      banner: banner,
     },
-    {
-      file: 'dist/midi-player.js',
-      ...umdOptions,
-      plugins: umdPlugins,
-    },
-    {
-      file: 'dist/midi-player.min.js',
-      sourcemap: true,
-      ...umdOptions,
-      plugins: [...umdPlugins, terser()]
-    },
-  ],
-  plugins: [
-    typescript(),
-    sass(),
-    url({
-      include: ['src/assets/**/*.svg']
-    }),
-  ],
-  external: [
-    '@magenta/music/es6/core'
-  ]
-}
+    plugins: [
+      typescript({
+        target: 'es2017'
+      }),
+      ...commonPlugins
+    ],
+    external: [
+      '@magenta/music/es6/core',
+      'tslib'
+    ]
+  },
+
+  {
+    input: 'src/index.ts',
+    output: [
+      {
+        file: 'dist/midi-player.js',
+        ...umdOutOptions,
+      },
+      {
+        file: 'dist/midi-player.min.js',
+        sourcemap: true,
+        ...umdOutOptions,
+        plugins: [
+          terser()
+        ]
+      },
+    ],
+    plugins: [
+      typescript({
+        target: 'esnext'
+      }),
+      babel({
+        extensions: ['.ts', '.js'],
+        presets: [
+          [
+            '@babel/preset-env', {
+              targets: 'supports audio-api and supports custom-elementsv1 and supports shadowdomv1'
+            }
+          ],
+        ],
+        babelHelpers: 'bundled'
+      }),
+      ...commonPlugins
+    ],
+    external: [
+      '@magenta/music/es6/core'
+    ]
+  }
+]

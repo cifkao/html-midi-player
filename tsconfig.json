@@ -10,15 +10,9 @@
     "allowUnreachableCode": false,
     "pretty": true,
     "skipLibCheck": true,
-    "target": "es6",
+    "target": "esnext",
     "module": "es6",
-    "moduleResolution": "node",
-    "lib": [
-      "es6",
-      "dom",
-      "dom.iterable",
-      "scripthost"
-    ]
+    "moduleResolution": "node"
   },
   "include": [
     "src/**/*"

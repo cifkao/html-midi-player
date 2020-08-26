@@ -18,6 +18,16 @@ See a demo [here](https://codepen.io/cifkao/pen/WNwpLzL).
 
 2. Add a player and a visualizer:
 
+   <!---
+   ```
+   <custom-element-demo>
+     <template>
+       <script src="https://cdn.jsdelivr.net/combine/npm/tone@13,npm/@magenta/music@1/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1"></script>
+       <next-code-block></next-code-block>
+     </template>
+   </custom-element-demo>
+   ```
+   -->
    ```html
    <midi-player
      src="https://magenta.github.io/magenta-js/music/demos/melody.mid"

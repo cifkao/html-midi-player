@@ -90,6 +90,6 @@ player.addVisualizer(document.getElementById('myOtherVisualizer'));
 The visualizer only gets updated while the player is playing, which allows a single visualizer to be bound to multiple players.
 
 ## Limitations
-- Only one player can play at a time due to the way playback is implemented in Magenta.js. Starting a player will stop any other player which is currently playing.
-- Seeking only works while playing. This is related to the first issue and caused by the same problem in Magenta.js.
+- Only one player can play at a time. Starting a player will stop any other player which is currently playing. ([#1](https://github.com/cifkao/html-midi-player/issues/1))
+- Seeking only works while playing. ([#2](https://github.com/cifkao/html-midi-player/issues/2))
 - Playback position only gets updated on note onsets. This may cause the player to appear stuck.

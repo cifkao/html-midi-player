@@ -1,7 +1,7 @@
 {
   "name": "html-midi-player",
   "description": "MIDI file player and visualizer web components",
-  "version": "0.0.1",
+  "version": "1.0.0-0",
   "author": "Ondřej Cífka",
   "license": "BSD-2-Clause",
   "homepage": "https://github.com/cifkao/html-midi-player#readme",
@@ -28,6 +28,12 @@
   "types": "dist/esm/index.d.ts",
   "jsdelivr": "dist/midi-player.js",
   "unpkg": "dist/midi-player.min.js",
+  "files": [
+    "dist/**/*",
+    "README.md",
+    "LICENSE",
+    "index.html"
+  ],
   "scripts": {
     "prebuild": "rm -rf dist",
     "build": "rollup -c && tsc -d --emitDeclarationOnly --declarationDir dist/esm",

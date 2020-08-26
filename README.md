@@ -1,22 +1,18 @@
 # html-midi-player
+
+[![npm version](https://badge.fury.io/js/html-midi-player.svg)](https://badge.fury.io/js/html-midi-player) [![](https://data.jsdelivr.com/v1/package/npm/html-midi-player/badge?style=rounded)](https://www.jsdelivr.com/package/npm/html-midi-player)
+
 `<midi-player>` and `<midi-visualizer>` HTML elements powered by [@magenta/music](https://github.com/magenta/magenta-js/tree/master/music/) (Magenta.js), fully stylable and scriptable.
 
 ## Getting started
 
-1. Put the necessary scripts in your `<head>` tag:
+1. Add the necessary scripts to your page:
 
    ```html
-   <!-- optional but recommended -->
-   <script src="https://cdn.jsdelivr.net/npm/focus-visible@5/dist/focus-visible.min.js"></script>
- 
-   <!-- required -->
-   <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/13.8.21/Tone.js"></script>
-   <script src="https://cdn.jsdelivr.net/npm/@magenta/music@1/es6/core.js"></script>
-   <script src="https://cdn.jsdelivr.net/npm/@magenta/music@1/es6/protobuf.js"></script>
-   <script src="https://github.com/cifkao/html-midi-player/releases/download/v0.0.1/html-midi-player.js"></script>
+   <script src="https://cdn.jsdelivr.net/combine/npm/tone@13,npm/@magenta/music@1/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1"></script>
    ```
 
-2. Add a player and a visualizer to `<body>`:
+2. Add a player and a visualizer:
 
    ```html
    <midi-player
@@ -28,6 +24,11 @@
 
 That's it!
 
+### Installing from NPM
+
+You can also add the package to your project from NPM, e.g. `npm install --save html-midi-player` or `yarn add html-midi-player`. Then you can either `import 'html-midi-player'` in your JavaScript code, or add the `node_modules/html-midi-player/dist/midi-player.min.js` bundle directly to your page.
+
+You should also add the [`focus-visible` polyfill](https://github.com/WICG/focus-visible) to enable outlines on keyboard focus.
 
 ## API basics
 

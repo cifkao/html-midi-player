@@ -4,6 +4,8 @@
 
 `<midi-player>` and `<midi-visualizer>` HTML elements powered by [@magenta/music](https://github.com/magenta/magenta-js/tree/master/music/) (Magenta.js), fully stylable and scriptable.
 
+See a demo [here](https://codepen.io/cifkao/pen/WNwpLzL).
+
 ## Getting started
 
 1. Add the necessary scripts to your page:

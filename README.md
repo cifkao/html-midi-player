@@ -8,7 +8,7 @@
 and [`<midi-visualizer>`](https://github.com/cifkao/html-midi-player/blob/master/doc/midi-visualizer.md#midi-visualizer)
 HTML elements powered by [@magenta/music](https://github.com/magenta/magenta-js/tree/master/music/) (Magenta.js), fully stylable and scriptable.
 
-See a demo [here](https://codepen.io/cifkao/pen/WNwpLzL).
+See the [simple demo](https://codepen.io/cifkao/pen/WNwpLzL) and the [advanced demo](https://codepen.io/cifkao/pen/GRZxqZN).
 
 ## Getting started
 

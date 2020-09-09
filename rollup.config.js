@@ -1,7 +1,7 @@
 import sass from 'rollup-plugin-sass';
 import typescript from '@rollup/plugin-typescript';
 import { terser } from 'rollup-plugin-terser';
-import url from '@rollup/plugin-url';
+import { string } from 'rollup-plugin-string';
 import babel from '@rollup/plugin-babel';
 
 import pkg from './package.json';
@@ -17,7 +17,7 @@ const banner =
 
 const commonPlugins = [
   sass(),
-  url({
+  string({
     include: ['src/assets/**/*.svg']
   }),
 ];

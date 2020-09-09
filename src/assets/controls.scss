@@ -53,8 +53,12 @@
       background: rgba(#ccc, 0.6);
     }
 
-    .icon {
+    .icon, .icon svg {
       vertical-align: middle;
+    }
+
+    .icon svg {
+      fill: currentColor;
     }
   }
 

@@ -24,7 +24,7 @@ See the [simple demo](https://codepen.io/cifkao/pen/WNwpLzL) and the [advanced d
    ```
    <custom-element-demo>
      <template>
-       <script src="https://cdn.jsdelivr.net/combine/npm/tone@13,npm/@magenta/music@1/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1"></script>
+       <script src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.21.0/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.1.0"></script>
        <next-code-block></next-code-block>
      </template>
    </custom-element-demo>

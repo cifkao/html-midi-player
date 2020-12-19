@@ -206,10 +206,17 @@ export class PlayerElement extends HTMLElement {
           playingPlayer = this;
           this._playing = true;
 
+          let offset = this.currentTime;
+          // Jump to the start if there are no notes left to play.
+          if (this.ns.notes.filter((note) => note.startTime >= offset).length == 0) {
+            offset = 0;
+          }
+          this.currentTime = offset;
+
           this.controlPanel.classList.remove('stopped');
           this.controlPanel.classList.add('playing');
           try {
-            const promise = this.player.start(this.ns);
+            const promise = this.player.start(this.ns, undefined, offset);
             this.dispatchEvent(new CustomEvent('start'));
             await promise;
             this.handleStop(true);
@@ -264,6 +271,9 @@ export class PlayerElement extends HTMLElement {
   protected handleStop(finished = false) {
     if (finished) {
       this.currentTime = this.duration;
+    } else {
+      // Try to avoid playing the last note again when resuming.
+      this.currentTime += 0.05;
     }
     this.controlPanel.classList.remove('playing');
     this.controlPanel.classList.add('stopped');

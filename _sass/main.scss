@@ -4,6 +4,12 @@
   overflow-x: hidden;
 }
 
+.page-header {
+  @include large {
+    padding: 3rem 4rem;
+  }
+}
+
 h1.project-name {
   font-family: 'Courier New', Courier, monospace;
 }

@@ -41,6 +41,6 @@ jobs:
       - name: Deploy to www-build
         uses: peaceiris/actions-gh-pages@v3
         with:
-          deploy_key: ${{ secrets.PAGES_DEPLOY_KEY }}
+          deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
           publish_dir: ./_site
           publish_branch: www-build

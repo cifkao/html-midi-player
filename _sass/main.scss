@@ -2,12 +2,56 @@
   /* Prevent overflow on mobile, see https://stackoverflow.com/questions/14270084/overflow-xhidden-doesnt-prevent-content-from-overflowing-in-mobile-browsers */
   position: relative;
   overflow-x: hidden;
-
-  @include large {
-    max-width: 85rem;
-  }
 }
 
 h1.project-name {
   font-family: 'Courier New', Courier, monospace;
+}
+
+$instrument-colors: #007bff, #20c997, #dc3545, #6610f2, #ffc107, #e83e8c, #17a2b8, #fd7e14, #28a745;
+
+#mainPlayer, #mainVisualizer {
+  display: block;
+  width: inherit;
+  margin: 4px 0;
+}
+
+#mainPlayer {
+  &::part(control-panel) {
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    background: #fafafa;
+  }
+}
+
+#mainVisualizer {
+  .piano-roll-visualizer {
+    width: inherit;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    background: #fafafa;
+    overflow: auto;
+
+    svg {
+      margin: 5px;
+
+      rect.note {
+        opacity: calc(min(1, (var(--midi-velocity) + 30) / 128) * 0.75);
+
+        &.active {
+          opacity: calc(min(1, (var(--midi-velocity) + 30) / 128) * 0.9);
+          stroke: black;
+          stroke-width: 0.75;
+          stroke-opacity: 0.75;
+        }
+      }
+
+      @for $i from 0 to 200 {
+        $color: nth($instrument-colors, ($i % length($instrument-colors)) + 1);
+        rect.note[data-instrument="#{$i}"] {
+          fill: darken(saturate($color, 40%), 10%);
+        }
+      }
+    }
+  }
 }

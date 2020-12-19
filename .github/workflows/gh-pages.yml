@@ -1,0 +1,46 @@
+name: GitHub Pages
+
+on:
+  push:
+    branches: [ www ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Ruby environment
+        uses: ruby/setup-ruby@v1.47.0
+        with:
+          ruby-version: 2.5.5
+          bundler-cache: true
+
+      - name: Set up Node.js environment
+        uses: actions/setup-node@v1.4.1
+
+      - name: Cache node_modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+
+      - name: Install Node.js dependencies
+        run: yarn install
+
+      - name: Build website
+        run: yarn build
+
+      - name: Deploy to www-build
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          deploy_key: ${{ secrets.PAGES_DEPLOY_KEY }}
+          publish_dir: ./_site
+          publish_branch: www-build

@@ -1,0 +1,31 @@
+theme: jekyll-theme-cayman
+
+github:
+  is_project_page: true
+  repository_name: html-midi-player
+  repository_url: https://github.com/cifkao/html-midi-player
+  owner_name: Ondřej Cífka
+  owner_url: https://github.com/cifkao
+  project_tagline: Play and display MIDI files on the web
+
+markdown: kramdown
+
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: default
+
+baseurl: /html-midi-player/
+
+exclude:
+  - assets/js
+  - node_modules
+  - vendor
+  - Gemfile.lock
+  - package.json
+  - yarn.lock
+  - yarn-error.log
+
+keep_files:
+  - assets/js

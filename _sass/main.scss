@@ -1,0 +1,13 @@
+.main-content {
+  /* Prevent overflow on mobile, see https://stackoverflow.com/questions/14270084/overflow-xhidden-doesnt-prevent-content-from-overflowing-in-mobile-browsers */
+  position: relative;
+  overflow-x: hidden;
+
+  @include large {
+    max-width: 85rem;
+  }
+}
+
+h1.project-name {
+  font-family: 'Courier New', Courier, monospace;
+}

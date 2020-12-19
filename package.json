@@ -1,0 +1,37 @@
+{
+  "private": true,
+  "scripts": {
+    "build": "npm-run-all build:parcel build:jekyll",
+    "build:parcel": "parcel build assets/js/index.js --dist-dir _site/assets/js",
+    "build:jekyll": "bundle exec jekyll build",
+    "dev": "npm-run-all --parallel watch:* serve",
+    "watch:parcel": "parcel watch assets/js/index.js --dist-dir _site/assets/js",
+    "watch:jekyll": "bundle exec jekyll build --watch",
+    "serve": "live-server --host=`hostname --fqdn` --port=4000 --mount=/html-midi-player/:_site _site"
+  },
+  "targets": {
+    "default": {
+      "includeNodeModules": {
+        "@magenta/music": false,
+        "tone": false
+      }
+    }
+  },
+  "alias": {
+    "@magenta/music": {
+      "global": "core"
+    },
+    "tone": {
+      "global": "Tone"
+    }
+  },
+  "devDependencies": {
+    "live-server": "^1.2.1",
+    "npm-run-all": "^4.1.5",
+    "parcel": "^2.0.0-beta.1"
+  },
+  "dependencies": {
+    "focus-visible": "^5.2.0",
+    "html-midi-player": "^1.1.0"
+  }
+}

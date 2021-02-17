@@ -14,17 +14,18 @@
 .controls {
   width: inherit;
   height: inherit;
+  box-sizing: border-box;
   display: flex;
   flex-direction: row;
 
   align-items: center;
   border-radius: 100px;
   background: #f2f5f6;
-  padding: 0 0.2rem;
+  padding: 0 0.25em;
   user-select: none;
 
   &> * {
-    margin: 0.7rem 0.4rem;
+    margin: 0.8em 0.45em;
   }
 
   input, button {
@@ -65,7 +66,7 @@
   .seek-bar {
     flex: 1;
     min-width: 0;
-    margin-right: 1.0rem;
+    margin-right: 1.1em;
 
     background: transparent;
 

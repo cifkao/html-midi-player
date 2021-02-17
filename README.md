@@ -46,7 +46,7 @@ That's it!
 
 You can also add the package to your project from NPM, e.g. `npm install --save html-midi-player` or `yarn add html-midi-player`. Then you can either:
 - `import 'html-midi-player'` in your JavaScript code (as an ES Module), or
-- add the `node_modules/html-midi-player/dist/midi-player.min.js` bundle directly to your page, along with the dependencies (`node_modules/tone/build/Tone.js`, `node_modules/@magenta/music/es6/core.js`).
+- add the `node_modules/html-midi-player/dist/midi-player.min.js` bundle directly to your page, along with the dependencies (`node_modules/tone/build/Tone.js`, `node_modules/@magenta/music/es6/core.js`; note that these need to go *before* `midi-player`).
 
 In both cases, you should also add the [`focus-visible` polyfill](https://github.com/WICG/focus-visible) to enable outlines on keyboard focus.
 
@@ -109,5 +109,5 @@ The visualizer only gets updated while the player is playing, which allows a sin
 
 ## Limitations
 - Only one player can play at a time. Starting a player will stop any other player which is currently playing. ([#1](https://github.com/cifkao/html-midi-player/issues/1))
-- Seeking only works while playing. ([#2](https://github.com/cifkao/html-midi-player/issues/2))
+- Seeking only works while playing. ([#2](https://github.com/cifkao/html-midi-player/issues/2)) This should get fixed soon (once the next version of Magenta.js is released).
 - Playback position only gets updated on note onsets. This may cause the player to appear stuck.

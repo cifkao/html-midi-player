@@ -17,7 +17,7 @@ HTML elements powered by [@magenta/music](https://github.com/magenta/magenta-js/
 1. Add the necessary scripts to your page:
 
    ```html
-   <script src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.21.0/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.1.0"></script>
+   <script src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.21.0/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.1.1"></script>
    ```
 
 2. Add a player and a visualizer:
@@ -26,7 +26,7 @@ HTML elements powered by [@magenta/music](https://github.com/magenta/magenta-js/
    ```
    <custom-element-demo>
      <template>
-       <script src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.21.0/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.1.0"></script>
+       <script src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.21.0/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.1.1"></script>
        <next-code-block></next-code-block>
      </template>
    </custom-element-demo>

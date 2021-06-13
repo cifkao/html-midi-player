@@ -61,6 +61,7 @@ export class PlayerElement extends HTMLElement {
 
   protected ns: INoteSequence = null;
   protected _playing = false;
+  protected seeking = false;
 
   static get observedAttributes() { return ['sound-font', 'src', 'visualizer']; }
 
@@ -98,6 +99,7 @@ export class PlayerElement extends HTMLElement {
     });
     this.seekBar.addEventListener('input', () => {
       // Pause playback while the user is manipulating the control
+      this.seeking = true;
       if (this.player && this.player.getPlayState() === 'started') {
         this.player.pause();
       }
@@ -113,6 +115,7 @@ export class PlayerElement extends HTMLElement {
           }
         }
       }
+      this.seeking = false;
     });
 
     this.initPlayerNow();
@@ -264,6 +267,9 @@ export class PlayerElement extends HTMLElement {
       return;
     }
     this.dispatchEvent(new CustomEvent('note', {detail: {note}}));
+    if (this.seeking) {
+      return;
+    }
     this.seekBar.value = String(note.startTime);
     this.currentTimeLabel.textContent = utils.formatTime(note.startTime);
   }
@@ -271,9 +277,6 @@ export class PlayerElement extends HTMLElement {
   protected handleStop(finished = false) {
     if (finished) {
       this.currentTime = this.duration;
-    } else {
-      // Try to avoid playing the last note again when resuming.
-      this.currentTime += 0.05;
     }
     this.controlPanel.classList.remove('playing');
     this.controlPanel.classList.add('stopped');

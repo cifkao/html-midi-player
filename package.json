@@ -59,6 +59,6 @@
     "web-component-analyzer": "^1.1.6"
   },
   "dependencies": {
-    "@magenta/music": "^1.19.0"
+    "@magenta/music": "^1.22.0"
   }
 }

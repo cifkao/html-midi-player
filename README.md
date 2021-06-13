@@ -19,7 +19,7 @@ If you use `html-midi-player` on your website, please consider linking back to [
 1. Add the necessary scripts to your page:
 
    ```html
-   <script src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.21.0/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.1.1"></script>
+   <script src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.22.0/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.2.0"></script>
    ```
 
 2. Add a player and a visualizer:
@@ -28,7 +28,7 @@ If you use `html-midi-player` on your website, please consider linking back to [
    ```
    <custom-element-demo>
      <template>
-       <script src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.21.0/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.1.1"></script>
+       <script src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.22.0/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.2.0"></script>
        <next-code-block></next-code-block>
      </template>
    </custom-element-demo>
@@ -112,5 +112,4 @@ The visualizer only gets updated while the player is playing, which allows a sin
 ## Limitations
 - Only one player can play at a time. Starting a player will stop any other player which is currently playing. ([#1](https://github.com/cifkao/html-midi-player/issues/1))
   This can actually be a benefit in many cases.
-- Seeking only works while playing. ([#2](https://github.com/cifkao/html-midi-player/issues/2)) This should get fixed soon (once the next version of Magenta.js is released).
 - Playback position only gets updated on note onsets. This may cause the player to appear stuck.

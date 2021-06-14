@@ -211,7 +211,7 @@ export class PlayerElement extends HTMLElement {
 
           let offset = this.currentTime;
           // Jump to the start if there are no notes left to play.
-          if (this.ns.notes.filter((note) => note.startTime >= offset).length == 0) {
+          if (this.ns.notes.filter((note) => note.startTime > offset).length == 0) {
             offset = 0;
           }
           this.currentTime = offset;

@@ -32,6 +32,6 @@
   },
   "dependencies": {
     "focus-visible": "^5.2.0",
-    "html-midi-player": "^1.2.1"
+    "html-midi-player": "^1.2.2"
   }
 }

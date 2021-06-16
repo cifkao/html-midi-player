@@ -1,5 +1,5 @@
-import * as mm from '@magenta/music/es6/core';
-import {NoteSequence, INoteSequence} from '@magenta/music/es6/protobuf';
+import * as mm from '@magenta/music/esm/core.js';
+import {NoteSequence, INoteSequence} from '@magenta/music/esm/protobuf.js';
 
 
 const VISUALIZER_TYPES = ['piano-roll', 'waterfall', 'staff'] as const;
@@ -38,7 +38,7 @@ export class VisualizerElement extends HTMLElement {
       return;
     }
     this.domInitialized = true;
-  
+
     this.wrapper = document.createElement('div');
     this.appendChild(this.wrapper);
 

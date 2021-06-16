@@ -26,7 +26,7 @@ const umdOutOptions = {
   format: 'umd',
   name: 'midiPlayer',
   globals: {
-    '@magenta/music/es6/core': 'core'
+    '@magenta/music/esm/core.js': 'core'
   },
   banner: banner
 };
@@ -46,7 +46,7 @@ export default [
       ...commonPlugins
     ],
     external: [
-      '@magenta/music/es6/core',
+      '@magenta/music/esm/core.js',
       'tslib'
     ]
   },
@@ -85,7 +85,7 @@ export default [
       ...commonPlugins
     ],
     external: [
-      '@magenta/music/es6/core'
+      '@magenta/music/esm/core.js'
     ]
   }
 ]

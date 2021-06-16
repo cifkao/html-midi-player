@@ -835,10 +835,10 @@
     lodash "^4.17.19"
     to-fast-properties "^2.0.0"
 
-"@magenta/music@^1.22.0":
-  version "1.22.0"
-  resolved "https://registry.yarnpkg.com/@magenta/music/-/music-1.22.0.tgz#e7519424ca49d6db54b29c6eb36eed0a70d88276"
-  integrity sha512-Y4bvwXk/Lj/sRAbLojiAe4gMEDq2iZQD/liHLK6ynFcDXMyk3bHxAe8BGUTBsUdPdcvhFuD9jCj8ozlh64okXw==
+"@magenta/music@^1.22.1":
+  version "1.22.1"
+  resolved "https://registry.yarnpkg.com/@magenta/music/-/music-1.22.1.tgz#4122ce608912cb50c13528112245fc95d94944de"
+  integrity sha512-Dyizro0bgqkONz2Es8q8Q4oWr9Z6h5eiaOwRdWwQudWSplLhEaFJ/yy/xhPhk2tmjWKfCI7n7NFrkolhZ3eu/g==
   dependencies:
     "@tensorflow/tfjs" "^2.7.0"
     "@tensorflow/tfjs-backend-webgl" "^2.7.0"

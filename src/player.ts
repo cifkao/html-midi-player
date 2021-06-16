@@ -1,5 +1,5 @@
-import * as mm from '@magenta/music/es6/core';
-import {NoteSequence, INoteSequence} from '@magenta/music/es6/protobuf';
+import * as mm from '@magenta/music/esm/core.js';
+import {NoteSequence, INoteSequence} from '@magenta/music/esm/protobuf.js';
 
 import {controlsTemplate} from './assets';
 import * as utils from './utils';

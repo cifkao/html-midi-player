@@ -1,6 +1,7 @@
 import * as mm from '@magenta/music/esm/core.js';
 import {NoteSequence, INoteSequence} from '@magenta/music/esm/protobuf.js';
 
+import {visualizerTemplate} from './assets';
 
 const VISUALIZER_TYPES = ['piano-roll', 'waterfall', 'staff'] as const;
 type VisualizerType = typeof VISUALIZER_TYPES[number];
@@ -34,6 +35,9 @@ export class VisualizerElement extends HTMLElement {
   static get observedAttributes() { return ['src', 'type']; }
 
   connectedCallback() {
+    this.attachShadow({mode: 'open'});
+    this.shadowRoot.appendChild(visualizerTemplate.content.cloneNode(true));
+
     if (this.domInitialized) {
       return;
     }

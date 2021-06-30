@@ -19,7 +19,7 @@ If you use `html-midi-player` on your website, please consider linking back to [
 1. Add the necessary scripts to your page:
 
    ```html
-   <script src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.22.0/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.2.2"></script>
+   <script src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.22.1/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.3.0"></script>
    ```
 
 2. Add a player and a visualizer:
@@ -28,7 +28,7 @@ If you use `html-midi-player` on your website, please consider linking back to [
    ```
    <custom-element-demo>
      <template>
-       <script src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.22.0/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.2.2"></script>
+       <script src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.22.1/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.3.0"></script>
        <next-code-block></next-code-block>
      </template>
    </custom-element-demo>

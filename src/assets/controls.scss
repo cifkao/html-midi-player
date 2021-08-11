@@ -17,6 +17,8 @@
   box-sizing: border-box;
   display: flex;
   flex-direction: row;
+  position: relative;
+  overflow: hidden;
 
   align-items: center;
   border-radius: 100px;
@@ -84,4 +86,32 @@
     opacity: 0.5;
   }
 
+  .overlay {
+    z-index: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 0;
+    box-sizing: border-box;
+    display: none;
+    opacity: 1;
+  }
+
+  &.frozen .loading-overlay {
+    display: block;
+    background: linear-gradient(to right, #92929200 5%, #929292cc 20%, #92929200 40%);
+    background-size: 1000px 100%;
+    animation: shimmer 2s linear infinite;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
 }

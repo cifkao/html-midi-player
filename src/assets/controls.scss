@@ -52,16 +52,20 @@
       background: rgba(#ccc, 0.3);
     }
 
-    &:active {
+    &:not(:disabled):active {
       background: rgba(#ccc, 0.6);
     }
 
-    .icon, .icon svg {
-      vertical-align: middle;
-    }
+    .icon {
+      display: none;
 
-    .icon svg {
-      fill: currentColor;
+      &, svg {
+        vertical-align: middle;
+      }
+
+      svg {
+        fill: currentColor;
+      }
     }
   }
 
@@ -78,11 +82,11 @@
     }
   }
 
-  &.playing .play-icon, &.stopped .stop-icon {
-    display: none;
+  &.stopped .play-icon, &.playing .stop-icon, &.error .error-icon {
+    display: inherit;
   }
 
-  &.frozen > div, &> button:disabled .icon {
+  &.loading > div, &.error > div, &> button:disabled .icon {
     opacity: 0.5;
   }
 
@@ -99,9 +103,9 @@
     opacity: 1;
   }
 
-  &.frozen .loading-overlay {
+  &.loading .loading-overlay {
     display: block;
-    background: linear-gradient(to right, #92929200 5%, #929292cc 20%, #92929200 40%);
+    background: linear-gradient(110deg, #92929200 5%, #929292cc 25%, #92929200 45%);
     background-size: 1000px 100%;
     animation: shimmer 2s linear infinite;
   }

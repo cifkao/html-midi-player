@@ -142,7 +142,7 @@ export class PlayerElement extends HTMLElement {
     this.needInitNs = this.needInitNs || initNs;
     if (this.initTimeout == null) {
       this.stop();
-      this.freeze();
+      this.setLoading();
       this.initTimeout = window.setTimeout(() => this.initPlayerNow(this.needInitNs));
     }
   }
@@ -154,49 +154,54 @@ export class PlayerElement extends HTMLElement {
       return;
     }
 
-    let ns: INoteSequence = null;
-    if (initNs) {
-      if (this.src) {
-        this.ns = null;
-        this.ns = await mm.urlToNoteSequence(this.src);
+    try {
+      let ns: INoteSequence = null;
+      if (initNs) {
+        if (this.src) {
+          this.ns = null;
+          this.ns = await mm.urlToNoteSequence(this.src);
+        }
+        this.currentTime = 0;
       }
-      this.currentTime = 0;
-    }
-    ns = this.ns;
+      ns = this.ns;
 
-    if (ns) {
-      this.seekBar.max = String(ns.totalTime);
-      this.totalTimeLabel.textContent = utils.formatTime(ns.totalTime);
-    } else {
-      this.seekBar.max = '0';
-      this.totalTimeLabel.textContent = utils.formatTime(0);
-      return;
-    }
-
-    let soundFont = this.soundFont;
-    const callbackObject = {
-      // Call callbacks only if we are still playing the same note sequence.
-      run: (n: NoteSequence.INote) => (this.ns === ns) && this.noteCallback(n),
-      stop: () => {}
-    };
-    if (soundFont === null) {
-      this.player = new mm.Player(false, callbackObject);
-    } else {
-      if (soundFont === "") {
-        soundFont = DEFAULT_SOUNDFONT;
+      if (ns) {
+        this.seekBar.max = String(ns.totalTime);
+        this.totalTimeLabel.textContent = utils.formatTime(ns.totalTime);
+      } else {
+        this.seekBar.max = '0';
+        this.totalTimeLabel.textContent = utils.formatTime(0);
+        return;
       }
-      this.player = new mm.SoundFontPlayer(soundFont, undefined, undefined, undefined,
-                                           callbackObject);
-      await (this.player as mm.SoundFontPlayer).loadSamples(ns);
-    }
 
-    if (this.ns !== ns) {
-      // If we started loading a different sequence in the meantime...
-      return;
-    }
+      let soundFont = this.soundFont;
+      const callbackObject = {
+        // Call callbacks only if we are still playing the same note sequence.
+        run: (n: NoteSequence.INote) => (this.ns === ns) && this.noteCallback(n),
+        stop: () => {}
+      };
+      if (soundFont === null) {
+        this.player = new mm.Player(false, callbackObject);
+      } else {
+        if (soundFont === "") {
+          soundFont = DEFAULT_SOUNDFONT;
+        }
+        this.player = new mm.SoundFontPlayer(soundFont, undefined, undefined, undefined,
+                                            callbackObject);
+        await (this.player as mm.SoundFontPlayer).loadSamples(ns);
+      }
 
-    this.unfreeze();
-    this.dispatchEvent(new CustomEvent('load'));
+      if (this.ns !== ns) {
+        // If we started loading a different sequence in the meantime...
+        return;
+      }
+
+      this.setLoaded();
+      this.dispatchEvent(new CustomEvent('load'));
+    } catch (error) {
+      this.setError(String(error));
+      throw error;
+    }
   }
 
   start() {
@@ -308,16 +313,26 @@ export class PlayerElement extends HTMLElement {
     }
   }
 
-  protected freeze() {
+  protected setLoading() {
     this.playButton.disabled = true;
     this.seekBar.disabled = true;
-    this.controlPanel.classList.add('frozen');
+    this.controlPanel.classList.remove('error');
+    this.controlPanel.classList.add('loading');
+    this.controlPanel.removeAttribute('title');
   }
 
-  protected unfreeze() {
-    this.controlPanel.classList.remove('frozen');
+  protected setLoaded() {
+    this.controlPanel.classList.remove('loading');
     this.playButton.disabled = false;
     this.seekBar.disabled = false;
+  }
+
+  protected setError(error: string) {
+    this.playButton.disabled = true;
+    this.seekBar.disabled = true;
+    this.controlPanel.classList.remove('loading', 'stopped', 'playing');
+    this.controlPanel.classList.add('error');
+    this.controlPanel.title = error;
   }
 
   get noteSequence() {

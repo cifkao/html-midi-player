@@ -45,6 +45,7 @@ let playingPlayer: PlayerElement = null;
  * @csspart current-time - Elapsed time
  * @csspart total-time - Total duration
  * @csspart seek-bar - `<input type="range">` showing playback position
+ * @csspart loading-overlay - Overlay with shimmer animation
  */
 export class PlayerElement extends HTMLElement {
   private domInitialized = false;

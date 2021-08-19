@@ -49,11 +49,12 @@ midi-player::part(control-panel) {
 
 ## CSS Shadow Parts
 
-| Part            | Description                                      |
-|-----------------|--------------------------------------------------|
-| `control-panel` | `<div>` containing all the controls              |
-| `current-time`  | Elapsed time                                     |
-| `play-button`   | Play button                                      |
-| `seek-bar`      | `<input type="range">` showing playback position |
-| `time`          | Numeric time indicator                           |
-| `total-time`    | Total duration                                   |
+| Part              | Description                                      |
+|-------------------|--------------------------------------------------|
+| `control-panel`   | `<div>` containing all the controls              |
+| `current-time`    | Elapsed time                                     |
+| `loading-overlay` | Overlay with shimmer animation                   |
+| `play-button`     | Play button                                      |
+| `seek-bar`        | `<input type="range">` showing playback position |
+| `time`            | Numeric time indicator                           |
+| `total-time`      | Total duration                                   |

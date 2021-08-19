@@ -163,6 +163,9 @@ export class PlayerElement extends HTMLElement {
           this.ns = await mm.urlToNoteSequence(this.src);
         }
         this.currentTime = 0;
+        if (!this.ns) {
+          this.setError('No content loaded');
+        }
       }
       ns = this.ns;
 
@@ -318,12 +321,12 @@ export class PlayerElement extends HTMLElement {
     this.playButton.disabled = true;
     this.seekBar.disabled = true;
     this.controlPanel.classList.remove('error');
-    this.controlPanel.classList.add('loading');
+    this.controlPanel.classList.add('loading', 'frozen');
     this.controlPanel.removeAttribute('title');
   }
 
   protected setLoaded() {
-    this.controlPanel.classList.remove('loading');
+    this.controlPanel.classList.remove('loading', 'frozen');
     this.playButton.disabled = false;
     this.seekBar.disabled = false;
   }
@@ -332,7 +335,7 @@ export class PlayerElement extends HTMLElement {
     this.playButton.disabled = true;
     this.seekBar.disabled = true;
     this.controlPanel.classList.remove('loading', 'stopped', 'playing');
-    this.controlPanel.classList.add('error');
+    this.controlPanel.classList.add('error', 'frozen');
     this.controlPanel.title = error;
   }
 

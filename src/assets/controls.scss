@@ -86,7 +86,7 @@
     display: inherit;
   }
 
-  &.loading > div, &.error > div, &> button:disabled .icon {
+  &.frozen > div, &> button:disabled .icon {
     opacity: 0.5;
   }
 

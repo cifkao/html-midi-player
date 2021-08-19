@@ -105,17 +105,18 @@
 
   &.loading .loading-overlay {
     display: block;
-    background: linear-gradient(110deg, #92929200 5%, #929292cc 25%, #92929200 45%);
-    background-size: 1000px 100%;
-    animation: shimmer 2s linear infinite;
+    background: linear-gradient(110deg, #92929200 5%, #92929288 25%, #92929200 45%);
+    background-size: 250% 100%;
+    background-repeat: repeat-y;
+    animation: shimmer 1.5s linear infinite;
   }
 }
 
 @keyframes shimmer {
   0% {
-    background-position: -1000px 0;
+    background-position: 125% 0;
   }
   100% {
-    background-position: 1000px 0;
+    background-position: -200% 0;
   }
 }

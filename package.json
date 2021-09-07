@@ -7,7 +7,7 @@
     "dev": "npm-run-all --parallel watch:* serve",
     "watch:parcel": "parcel watch assets/js/index.js --dist-dir _site/assets/js",
     "watch:jekyll": "bundle exec jekyll build --watch",
-    "serve": "live-server --host=`hostname --fqdn` --port=4000 --mount=/html-midi-player/:_site _site"
+    "serve": "live-server --host=0.0.0.0 --port=4000 --mount=/html-midi-player/:_site _site"
   },
   "targets": {
     "default": {

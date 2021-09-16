@@ -1,7 +1,7 @@
 # html-midi-player
 
 [![npm package](https://badge.fury.io/js/html-midi-player.svg)](https://badge.fury.io/js/html-midi-player)
-[![npm package daily downloads](https://badgen.net/npm/dm/html-midi-player)](https://npmjs.ccom/package/html-midi-player)
+[![npm package daily downloads](https://badgen.net/npm/dm/html-midi-player)](https://npmjs.com/package/html-midi-player)
 [![jsDelivr](https://data.jsdelivr.com/v1/package/npm/html-midi-player/badge?style=rounded)](https://www.jsdelivr.com/package/npm/html-midi-player)
 [![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/html-midi-player)
 

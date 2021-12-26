@@ -13,6 +13,8 @@ HTML elements powered by [@magenta/music](https://github.com/magenta/magenta-js/
 * [Advanced demo](https://codepen.io/cifkao/pen/GRZxqZN)
 * [Website](https://cifkao.github.io/html-midi-player/) [[source](https://github.com/cifkao/html-midi-player/tree/www)] with MIDI file upload
 
+Notable websites that use `html-midi-player` include [abcnotation.com](https://abcnotation.com/), [Musical Nexus](https://musicalnexus.net/) and demo websites for music generation models: [piano infilling](https://jackyhsiung.github.io/piano-infilling-demo/), [stochastic positional encoding](https://cifkao.github.io/spe/).
+
 If you use `html-midi-player` on your website, please consider linking back to [the repository](https://github.com/cifkao/html-midi-player/).
 
 ## Getting started

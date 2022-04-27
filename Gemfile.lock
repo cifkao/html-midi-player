@@ -65,8 +65,9 @@ PLATFORMS
 
 DEPENDENCIES
   jekyll (~> 3.9.0)
+  jekyll-seo-tag (~> 2.6)
   jekyll-theme-cayman (~> 0.1.1)
   kramdown-parser-gfm (~> 1.1)
 
 BUNDLED WITH
-   2.1.4
+   2.3.12

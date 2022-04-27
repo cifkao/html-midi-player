@@ -1,4 +1,5 @@
-theme: jekyll-theme-cayman
+title: html-midi-player: MIDI player web component
+description: HTML MIDI player is a web component for MIDI playback and visulation in the browser. You can use it to play MIDI files online.
 
 github:
   is_project_page: true
@@ -8,7 +9,12 @@ github:
   owner_url: https://github.com/cifkao
   project_tagline: Play and display MIDI files on the web
 
+theme: jekyll-theme-cayman
+
 markdown: kramdown
+
+plugins:
+  - jekyll-seo-tag
 
 defaults:
   - scope:

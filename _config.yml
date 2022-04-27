@@ -2,6 +2,9 @@ title: "html-midi-player"
 tagline: "Play and display MIDI files online"
 description: "A web component for MIDI playback and visualization in the browser. It allows playing MIDI files online."
 
+titles_from_headings:
+  enabled: false
+
 github:
   is_project_page: true
   repository_name: html-midi-player

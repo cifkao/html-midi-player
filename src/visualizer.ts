@@ -93,6 +93,10 @@ export class VisualizerElement extends HTMLElement {
     }
   }
 
+  reload() {
+    this.initVisualizerNow();
+  }
+
   redraw(activeNote?: NoteSequence.INote) {
     if (this.visualizer) {
       this.visualizer.redraw(activeNote, activeNote != null);
@@ -110,6 +114,9 @@ export class VisualizerElement extends HTMLElement {
   }
 
   set noteSequence(value: INoteSequence | null) {
+    if (this.ns == value) {
+      return;
+    }
     this.ns = value;
     this.removeAttribute('src');  // Triggers initVisualizer only if src was present.
     this.initVisualizer();

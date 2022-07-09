@@ -210,6 +210,10 @@ export class PlayerElement extends HTMLElement {
     }
   }
 
+  reload() {
+    this.initPlayerNow();
+  }
+
   start() {
     this._start();
   }
@@ -234,6 +238,14 @@ export class PlayerElement extends HTMLElement {
           this.controlPanel.classList.remove('stopped');
           this.controlPanel.classList.add('playing');
           try {
+            // Force reload visualizers to prevent stuttering at playback start
+            for (const visualizer of this.visualizerListeners.keys()) {
+              if (visualizer.noteSequence != this.ns) {
+                visualizer.noteSequence = this.ns;
+                visualizer.reload();
+              }
+            }
+
             const promise = this.player.start(this.ns, undefined, offset);
             if (!looped) {
               this.dispatchEvent(new CustomEvent('start'));
@@ -359,6 +371,9 @@ export class PlayerElement extends HTMLElement {
   }
 
   set noteSequence(value: INoteSequence | null) {
+    if (this.ns == value) {
+      return;
+    }
     this.ns = value;
     this.removeAttribute('src');  // Triggers initPlayer only if src was present.
     this.initPlayer();

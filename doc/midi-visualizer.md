@@ -23,3 +23,4 @@ See also the
 |--------------------|-------------------------------------------|
 | `clearActiveNotes` | `(): void`                                |
 | `redraw`           | `(activeNote?: INote \| undefined): void` |
+| `reload`           | `(): void`                                |

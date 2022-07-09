@@ -35,6 +35,7 @@ midi-player::part(control-panel) {
 | Method             | Type                                    |
 |--------------------|-----------------------------------------|
 | `addVisualizer`    | `(visualizer: VisualizerElement): void` |
+| `reload`           | `(): void`                              |
 | `removeVisualizer` | `(visualizer: VisualizerElement): void` |
 | `start`            | `(): void`                              |
 | `stop`             | `(): void`                              |

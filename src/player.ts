@@ -29,6 +29,7 @@ let playingPlayer: PlayerElement = null;
  * @prop src - MIDI file URL
  * @prop soundFont - Magenta SoundFont URL, an empty string to use the default SoundFont, or `null` to use a simple oscillator synth
  * @prop noteSequence - Magenta note sequence object representing the currently loaded content
+ * @prop loop - Indicates whether the player should loop
  * @prop currentTime - Current playback position in seconds
  * @prop duration - Content duration in seconds
  * @prop playing - Indicates whether the player is currently playing
@@ -37,6 +38,7 @@ let playingPlayer: PlayerElement = null;
  * @fires load - The content is loaded and ready to play
  * @fires start - The player has started playing
  * @fires stop - The player has stopped playing
+ * @fires loop - The player has automatically restarted playback after reaching the end
  * @fires note - A note starts
  *
  * @csspart control-panel - `<div>` containing all the controls
@@ -209,10 +211,14 @@ export class PlayerElement extends HTMLElement {
   }
 
   start() {
+    this._start();
+  }
+
+  protected _start(looped = false) {
     (async () => {
       if (this.player) {
         if (this.player.getPlayState() == 'stopped') {
-          if (playingPlayer && playingPlayer.playing) {
+          if (playingPlayer && playingPlayer.playing && !(playingPlayer == this && looped)) {
             playingPlayer.stop();
           }
           playingPlayer = this;
@@ -229,7 +235,11 @@ export class PlayerElement extends HTMLElement {
           this.controlPanel.classList.add('playing');
           try {
             const promise = this.player.start(this.ns, undefined, offset);
-            this.dispatchEvent(new CustomEvent('start'));
+            if (!looped) {
+              this.dispatchEvent(new CustomEvent('start'));
+            } else {
+              this.dispatchEvent(new CustomEvent('loop'));
+            }
             await promise;
             this.handleStop(true);
           } catch (error) {
@@ -285,6 +295,11 @@ export class PlayerElement extends HTMLElement {
 
   protected handleStop(finished = false) {
     if (finished) {
+      if (this.loop) {
+        this.currentTime = 0;
+        this._start(true);
+        return;
+      }
       this.currentTime = this.duration;
     }
     this.controlPanel.classList.remove('playing');
@@ -368,6 +383,17 @@ export class PlayerElement extends HTMLElement {
 
   set soundFont(value: string | null) {
     this.setOrRemoveAttribute('sound-font', value);
+  }
+
+  /**
+   * @attr loop
+   */
+  get loop() {
+    return this.getAttribute('loop') != null;
+  }
+
+  set loop(value: boolean) {
+    this.setOrRemoveAttribute('loop', value ? '' : null);
   }
 
   get currentTime() {

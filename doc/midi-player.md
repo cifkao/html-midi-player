@@ -24,6 +24,7 @@ midi-player::part(control-panel) {
 |----------------|--------------|-------------------------|--------------------------------------------------|
 | `currentTime`  |              | `number`                | Current playback position in seconds             |
 | `duration`     |              | `number`                | Content duration in seconds                      |
+| `loop`         | `loop`       | `boolean`               | Indicates whether the player should loop         |
 | `noteSequence` |              | `INoteSequence \| null` | Magenta note sequence object representing the currently loaded content |
 | `playing`      |              | `boolean`               | Indicates whether the player is currently playing |
 | `soundFont`    | `sound-font` | `string \| null`        | Magenta SoundFont URL, an empty string to use the default SoundFont, or `null` to use a simple oscillator synth |
@@ -40,12 +41,13 @@ midi-player::part(control-panel) {
 
 ## Events
 
-| Event   | Type                                  | Description                             |
-|---------|---------------------------------------|-----------------------------------------|
-| `load`  |                                       | The content is loaded and ready to play |
-| `note`  | `CustomEvent<{ note: INote; }>`       | A note starts                           |
-| `start` |                                       | The player has started playing          |
-| `stop`  | `CustomEvent<{ finished: boolean; }>` | The player has stopped playing          |
+| Event   | Type                                  | Description                                      |
+|---------|---------------------------------------|--------------------------------------------------|
+| `load`  |                                       | The content is loaded and ready to play          |
+| `loop`  |                                       | The player has automatically restarted playback after reaching the end |
+| `note`  | `CustomEvent<{ note: INote; }>`       | A note starts                                    |
+| `start` |                                       | The player has started playing                   |
+| `stop`  | `CustomEvent<{ finished: boolean; }>` | The player has stopped playing                   |
 
 ## CSS Shadow Parts
 

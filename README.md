@@ -88,6 +88,15 @@ player.soundFont = 'https://storage.googleapis.com/magentadata/js/soundfonts/sgm
 ```
 See the [Magenta.js docs](https://magenta.github.io/magenta-js/music/index.html#soundfonts) for a list of available SoundFonts.
 
+### Looping
+To make the player loop, use the `loop` attribute:
+```html
+<midi-player loop></midi-player>
+```
+```javascript
+player.loop = true;
+```
+
 ### Visualizer settings
 The visualizer type is specified via the `type` attribute. Three visualizer types are supported: `piano-roll`, `waterfall` and `staff`.
 

@@ -47,6 +47,8 @@ If you use `html-midi-player` on your website, please consider linking back to [
 
 That's it!
 
+Besides [jsDelivr](https://www.jsdelivr.com/package/npm/html-midi-player), the bundle is also available from [cdnjs](https://cdnjs.com/libraries/html-midi-player).
+
 ### Installing from NPM
 
 You can also add the package to your project from NPM, e.g. `npm install --save html-midi-player` or `yarn add html-midi-player`. Then you can either:

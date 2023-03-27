@@ -123,6 +123,15 @@ player.addVisualizer(document.getElementById('myOtherVisualizer'));
 ```
 The visualizer only gets updated while the player is playing, which allows a single visualizer to be bound to multiple players.
 
+## FAQ
+Here are some frequently asked questions about `html-midi-player`. Make sure to also check [discussions](https://github.com/cifkao/html-midi-player/discussions) and [issues](https://github.com/cifkao/html-midi-player/issues?q=is%3Aissue) to see if your question is answered there.
+
+### How can I use custom samples?
+The player supports "SoundFonts" in a [special format](https://github.com/magenta/magenta-js/blob/d8a76682abb0979b985e4b80f6b68b5123b9f8d5/music/src/core/soundfont.ts#L381-L419) designed by Magenta. If you want to use a .sf2 file, it will not work out of the box, but it is possible to convert it with some effort. See [this discussion thread](https://github.com/cifkao/html-midi-player/discussions/43) and especially [this answer](https://github.com/cifkao/html-midi-player/discussions/43#discussioncomment-5439676), which proposes a conversion script.
+
+### Can you implement feature X or fix issue Y?
+This library is a relatively thin wrapper around [Magenta.js](https://github.com/magenta/magenta-js/), which provides all of the MIDI loading, synthesis and visualization functionality. This means it inherits most of its limitations. If you found an issue, try to check if Magenta.js is also affected, e.g. by uploading your MIDI file to [this](https://magenta.github.io/magenta-js/music/demos/player.html) or [this](https://magenta.github.io/magenta-js/music/demos/visualizer.html) demo (click *Load MIDI File* to upload your own file). If the issue is still there, then this is most likely a Magenta.js issue and cannot be fixed here (although a workaround may be possible). Otherwise, feel free to open an issue (or even better, a pull request) here, but please check for existing [issues](https://github.com/cifkao/html-midi-player/issues?q=is%3Aissue) and [discussions](https://github.com/cifkao/html-midi-player/discussions) first.
+
 ## Limitations
 - Only one player can play at a time. Starting a player will stop any other player which is currently playing. ([#1](https://github.com/cifkao/html-midi-player/issues/1))
   This can actually be a benefit in many cases.

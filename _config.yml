@@ -26,6 +26,7 @@ defaults:
 baseurl: /html-midi-player/
 
 exclude:
+  - README.md
   - assets/js
   - node_modules
   - vendor

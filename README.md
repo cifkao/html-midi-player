@@ -59,6 +59,8 @@ In both cases, you should also add the [`focus-visible` polyfill](https://github
 
 ## API basics
 
+The basic features of `html-midi-player` are explained below. Wherever both HTML and JavaScript examples are given, they are equivalent. In the JavaScript examples, `player` and `visualizer` refer to the corresponding custom element objects, which can be obtained using standard DOM methods like `document.getElementById('#myPlayer')` or `document.querySelectorAll('midi-player')`, for example.
+
 See also the API reference for both elements:
 [`midi-player`](https://github.com/cifkao/html-midi-player/blob/master/doc/midi-player.md#midi-player),
 [`midi-visualizer`](https://github.com/cifkao/html-midi-player/blob/master/doc/midi-visualizer.md#midi-visualizer).
@@ -76,6 +78,7 @@ Both `midi-player` and `midi-visualizer` support two different ways of specifyin
   ```javascript
   player.noteSequence = TWINKLE_TWINKLE;
   ```
+  To obtain a `NoteSequence`, you can use Magenta functions like [`urlToNoteSequence()`](https://magenta.github.io/magenta-js/music/modules/_core_.html#urltonotesequence) (see [FAQ](#how-do-i-create-and-manipulate-notesequences)).
 
 ### SoundFonts
 By default, the player will use a simple oscillator synth. To use a SoundFont, add the `sound-font` attribute:
@@ -102,7 +105,7 @@ player.loop = true;
 ### Visualizer settings
 The visualizer type is specified via the `type` attribute. Three visualizer types are supported: `piano-roll`, `waterfall` and `staff`.
 
-Each visualizer type has a set of settings that can be specified using the `config` attribute, e.g.:
+Each visualizer type has a set of settings that can be specified using the `config` attribute (only from JavaScript), e.g.:
 ```javascript
 visualizer.config = {
   noteHeight: 4,
@@ -123,6 +126,9 @@ player.addVisualizer(document.getElementById('myOtherVisualizer'));
 ```
 The visualizer only gets updated while the player is playing, which allows a single visualizer to be bound to multiple players.
 
+### Events
+The player supports listening to different kinds of events using the `player.addEventListener()` method. See the [API reference](https://github.com/cifkao/html-midi-player/blob/master/doc/midi-player.md#events) for the available event types.
+
 ## FAQ
 Here are some frequently asked questions about `html-midi-player`. Make sure to also check [discussions](https://github.com/cifkao/html-midi-player/discussions) and [issues](https://github.com/cifkao/html-midi-player/issues?q=is%3Aissue) to see if your question is answered there.
 
@@ -131,6 +137,11 @@ The player supports "SoundFonts" in a [special format](https://github.com/magent
 
 ### Can you implement feature X or fix issue Y?
 This library is a relatively thin wrapper around [Magenta.js](https://github.com/magenta/magenta-js/), which provides all of the MIDI loading, synthesis and visualization functionality. This means it inherits most of its limitations. If you found an issue, try to check if Magenta.js is also affected, e.g. using [this](https://magenta.github.io/magenta-js/music/demos/player.html) or [this](https://magenta.github.io/magenta-js/music/demos/visualizer.html) demo (click *Load MIDI File* to upload your own file). If the issue is still there, then this is most likely a Magenta.js issue and cannot be fixed here (although a workaround may be possible). Otherwise, feel free to open an issue (or even better, a pull request) here, but please check for existing [issues](https://github.com/cifkao/html-midi-player/issues?q=is%3Aissue) and [discussions](https://github.com/cifkao/html-midi-player/discussions) first.
+
+### How do I create and manipulate `NoteSequence`s?
+The Magenta.js [`core`](https://magenta.github.io/magenta-js/music/modules/_core_.html) and [`core/sequences`](https://magenta.github.io/magenta-js/music/modules/_core_sequences_.html) modules define functions for loading and manipulating `NoteSequence`s. To load a MIDI file as a `NoteSequence`, use the `urlToNoteSequence()` function. Other useful functions are `clone()`, `trim()` and `concatenate()`. 
+
+If you are using the provided bundle as suggested [above](#getting-started), then the `core` module will be available simply as `core`, so you will be able to call e.g. `core.urlToNoteSequence()` or `core.sequences.clone()` from your code.
 
 ## Limitations
 - Only one player can play at a time. Starting a player will stop any other player which is currently playing. ([#1](https://github.com/cifkao/html-midi-player/issues/1))

@@ -36,7 +36,8 @@ let playingPlayer: PlayerElement = null;
  * @attr visualizer - A selector matching `midi-visualizer` elements to bind to this player
  *
  * @fires load - The content is loaded and ready to play
- * @fires start - The player has started playing
+ * @fires play - The player has started playing
+ * @fires pause - The player has paused playing
  * @fires stop - The player has stopped playing
  * @fires loop - The player has automatically restarted playback after reaching the end
  * @fires note - A note starts
@@ -215,6 +216,11 @@ export class PlayerElement extends HTMLElement {
   }
 
   start() {
+    console.warn('[html-midi-player] please use play() instead of start()');
+    this._start();
+  }
+
+  play() {
     this._start();
   }
 
@@ -266,11 +272,18 @@ export class PlayerElement extends HTMLElement {
     })();
   }
 
-  stop() {
+  pause() {
     if (this.player && this.player.isPlaying()) {
       this.player.stop();
     }
     this.handleStop(false);
+  }
+
+  stop() {
+    if (this.player && this.player.isPlaying()) {
+      this.player.stop();
+    }
+    this.handleStop(true);
   }
 
   addVisualizer(visualizer: VisualizerElement) {

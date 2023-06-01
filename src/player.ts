@@ -167,7 +167,12 @@ export class PlayerElement extends HTMLElement {
         if (this.src) {
           this.dispatchEvent(new CustomEvent('loadstart'));
           this.ns = null;
-          this.ns = await mm.urlToNoteSequence(this.src);
+          try {
+            this.ns = await mm.urlToNoteSequence(this.src);
+          } catch (e) {
+            this.dispatchEvent(new CustomEvent('abort'));
+            throw e;
+          }
         }
         this.currentTime = 0;
         if (!this.ns) {

@@ -65,6 +65,7 @@ export class PlayerElement extends HTMLElement {
   protected visualizerListeners = new Map<VisualizerElement, {[name: string]: EventListener}>();
 
   protected ns: INoteSequence = null;
+  protected _ended = false;
   protected _playing = false;
   protected seeking = false;
   protected _lastError: any = null; // TODO: should we follow MediaError interface?
@@ -281,6 +282,7 @@ export class PlayerElement extends HTMLElement {
           }
         }
 
+        this._ended = false;
         const promise = this.player.start(this.ns, undefined, offset);
         // fired after playback is first started, and whenever it is restarted
         this.dispatchEvent(new CustomEvent('playing'));
@@ -288,14 +290,16 @@ export class PlayerElement extends HTMLElement {
           this.dispatchEvent(new CustomEvent('loop'));
         }
         await promise;
-        this.handleStop(true);
         this.dispatchEvent(new CustomEvent('ended'));
+        this._ended = true;
+        this.handleStop(true); // call after dispatch 'ended' event (it will trigger loop restart)
       } catch (error) {
         this.handleStop();
         this.dispatchError(error);
         throw error;
       }
     } else if (this.player.getPlayState() == 'paused') {
+      this._ended = false;
       this.player.resume();
       // fired after playback is first started, and whenever it is restarted
       this.dispatchEvent(new CustomEvent('playing'));
@@ -499,6 +503,10 @@ export class PlayerElement extends HTMLElement {
 
   get playing() {
     return this._playing;
+  }
+
+  get ended() {
+    return this._ended;
   }
 
   get paused() {

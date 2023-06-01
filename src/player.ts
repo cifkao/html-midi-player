@@ -496,6 +496,10 @@ export class PlayerElement extends HTMLElement {
     ) ? 'probably' : '';
   }
 
+  fastSeek(seconds: number) {
+    this.currentTime = seconds;
+  }
+
   protected setOrRemoveAttribute(name: string, value: string) {
     if (value == null) {
       this.removeAttribute(name);

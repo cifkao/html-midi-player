@@ -179,9 +179,11 @@ export class PlayerElement extends HTMLElement {
       if (ns) {
         this.seekBar.max = String(ns.totalTime);
         this.totalTimeLabel.textContent = utils.formatTime(ns.totalTime);
+        this.dispatchEvent(new CustomEvent('durationchange'));
       } else {
         this.seekBar.max = '0';
         this.totalTimeLabel.textContent = utils.formatTime(0);
+        this.dispatchEvent(new CustomEvent('durationchange'));
         return;
       }
 

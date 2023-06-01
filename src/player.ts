@@ -167,6 +167,7 @@ export class PlayerElement extends HTMLElement {
         this.currentTime = 0;
         if (!this.ns) {
           this.setError('No content loaded');
+          this.dispatchError('No content loaded');
         }
       }
       ns = this.ns;
@@ -206,6 +207,7 @@ export class PlayerElement extends HTMLElement {
       this.dispatchEvent(new CustomEvent('load'));
     } catch (error) {
       this.setError(String(error));
+      this.dispatchError(error);
       throw error;
     }
   }
@@ -258,6 +260,7 @@ export class PlayerElement extends HTMLElement {
         this.handleStop(true);
       } catch (error) {
         this.handleStop();
+        this.dispatchError(error);
         throw error;
       }
     } else if (this.player.getPlayState() == 'paused') {
@@ -310,6 +313,16 @@ export class PlayerElement extends HTMLElement {
     }
     this.seekBar.value = String(note.startTime);
     this.currentTimeLabel.textContent = utils.formatTime(note.startTime);
+  }
+
+  protected dispatchError(error?: unknown) {
+    // https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/error_event
+    // This event is not cancelable and does not bubble.
+    this.dispatchEvent(new CustomEvent('error', {
+      detail: error,
+      cancelable: false,
+      bubbles: false
+    }));
   }
 
   protected handleStop(finished = false) {

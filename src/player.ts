@@ -505,12 +505,13 @@ export class PlayerElement extends HTMLElement {
     return this.player?.getPlayState() === 'paused';
   }
 
+  // https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/canPlayType
   canPlayType(type: unknown): string {
-    // https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/canPlayType
-    // return type: '' | 'maybe' | 'probably';
+    // return: '' | 'maybe' | 'probably';
     // TODO: consider 'maybe' return case in some cases.
     return typeof type === 'string' && (
-      type === 'audio/midi' || type === 'audio/x-midi'
+      // type: https://developer.mozilla.org/en-US/docs/Web/Media/Formats/codecs_parameter
+      type.includes('audio/midi') || type.includes('audio/x-midi')
     ) ? 'probably' : '';
   }
 

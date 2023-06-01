@@ -217,8 +217,15 @@ export class PlayerElement extends HTMLElement {
     }
   }
 
-  reload() {
+  load() {
+    // https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/load
+    // resets the media element to its initial state and
+    // begins the process of selecting a media source and loading the media in preparation for playback to begin at the beginning.
     this.initPlayerNow();
+  }
+
+  reload() {
+    this.load(); // same behavior with load
   }
 
   async play() {

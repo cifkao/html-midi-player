@@ -428,6 +428,10 @@ export class PlayerElement extends HTMLElement {
     return this.hasAttribute('autoplay');
   }
 
+  set autoplay(value: boolean) {
+    this.setOrRemoveAttribute('autoplay', value ? '' : null);
+  }
+
   get src() {
     return this.getAttribute('src');
   }

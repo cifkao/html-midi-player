@@ -437,6 +437,15 @@ export class PlayerElement extends HTMLElement {
     return this._playing;
   }
 
+  canPlayType(type: unknown): string {
+    // https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/canPlayType
+    // return type: '' | 'maybe' | 'probably';
+    // TODO: consider 'maybe' return case in some cases.
+    return typeof type === 'string' && (
+      type === 'audio/midi' || type === 'audio/x-midi'
+    ) ? 'probably' : '';
+  }
+
   protected setOrRemoveAttribute(name: string, value: string) {
     if (value == null) {
       this.removeAttribute(name);

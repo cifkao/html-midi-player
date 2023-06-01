@@ -162,6 +162,7 @@ export class PlayerElement extends HTMLElement {
       let ns: INoteSequence = null;
       if (initNs) {
         if (this.src) {
+          this.dispatchEvent(new CustomEvent('loadstart'));
           this.ns = null;
           this.ns = await mm.urlToNoteSequence(this.src);
         }
@@ -205,7 +206,10 @@ export class PlayerElement extends HTMLElement {
       }
 
       this.setLoaded();
-      this.dispatchEvent(new CustomEvent('load'));
+      this.dispatchEvent(new CustomEvent('loadeddata'));
+      if (this.src) {
+        this.dispatchEvent(new CustomEvent('canplay'));
+      }
     } catch (error) {
       this.setError(String(error));
       this.dispatchError(error);

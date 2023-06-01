@@ -238,7 +238,7 @@ export class PlayerElement extends HTMLElement {
     //    the paused prop is changed from true to false,
     //    as a result of the play method,
     //    or the autoplay attribute.
-    this.dispatchEvent(new CustomEvent('play', { cancelable: false, bubbles: false }));
+    this.dispatchEvent(new CustomEvent('play'));
   }
 
   protected async _start(looped = false) {
@@ -273,13 +273,13 @@ export class PlayerElement extends HTMLElement {
 
         const promise = this.player.start(this.ns, undefined, offset);
         // fired after playback is first started, and whenever it is restarted
-        this.dispatchEvent(new CustomEvent('playing', { cancelable: false, bubbles: false }));
+        this.dispatchEvent(new CustomEvent('playing'));
         if (looped) {
           this.dispatchEvent(new CustomEvent('loop'));
         }
         await promise;
         this.handleStop(true);
-        this.dispatchEvent(new CustomEvent('ended', { cancelable: false, bubbles: false }));
+        this.dispatchEvent(new CustomEvent('ended'));
       } catch (error) {
         this.handleStop();
         this.dispatchError(error);
@@ -288,7 +288,7 @@ export class PlayerElement extends HTMLElement {
     } else if (this.player.getPlayState() == 'paused') {
       this.player.resume();
       // fired after playback is first started, and whenever it is restarted
-      this.dispatchEvent(new CustomEvent('playing', { cancelable: false, bubbles: false }));
+      this.dispatchEvent(new CustomEvent('playing'));
     }
   }
 
@@ -341,13 +341,8 @@ export class PlayerElement extends HTMLElement {
 
   protected dispatchError(error?: unknown) {
     // https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/error_event
-    // This event is not cancelable and does not bubble.
     this._lastError = error; // TODO: implement MediaError interface
-    this.dispatchEvent(new CustomEvent('error', {
-      detail: error,
-      cancelable: false,
-      bubbles: false
-    }));
+    this.dispatchEvent(new CustomEvent('error'));
   }
 
   protected handleStop(finished = false) {

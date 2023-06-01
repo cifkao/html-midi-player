@@ -215,61 +215,54 @@ export class PlayerElement extends HTMLElement {
     this.initPlayerNow();
   }
 
-  start() {
-    console.warn('[html-midi-player] please use play() instead of start()');
-    this._start();
+  async play() {
+    await this._start();
   }
 
-  play() {
-    this._start();
-  }
-
-  protected _start(looped = false) {
-    (async () => {
-      if (this.player) {
-        if (this.player.getPlayState() == 'stopped') {
-          if (playingPlayer && playingPlayer.playing && !(playingPlayer == this && looped)) {
-            playingPlayer.stop();
-          }
-          playingPlayer = this;
-          this._playing = true;
-
-          let offset = this.currentTime;
-          // Jump to the start if there are no notes left to play.
-          if (this.ns.notes.filter((note) => note.startTime > offset).length == 0) {
-            offset = 0;
-          }
-          this.currentTime = offset;
-
-          this.controlPanel.classList.remove('stopped');
-          this.controlPanel.classList.add('playing');
-          try {
-            // Force reload visualizers to prevent stuttering at playback start
-            for (const visualizer of this.visualizerListeners.keys()) {
-              if (visualizer.noteSequence != this.ns) {
-                visualizer.noteSequence = this.ns;
-                visualizer.reload();
-              }
-            }
-
-            const promise = this.player.start(this.ns, undefined, offset);
-            if (!looped) {
-              this.dispatchEvent(new CustomEvent('start'));
-            } else {
-              this.dispatchEvent(new CustomEvent('loop'));
-            }
-            await promise;
-            this.handleStop(true);
-          } catch (error) {
-            this.handleStop();
-            throw error;
-          }
-        } else if (this.player.getPlayState() == 'paused') {
-          // This normally should not happen, since we pause playback only when seeking.
-          this.player.resume();
+  protected async _start(looped = false) {
+    if (this.player) {
+      if (this.player.getPlayState() == 'stopped') {
+        if (playingPlayer && playingPlayer.playing && !(playingPlayer == this && looped)) {
+          playingPlayer.stop();
         }
+        playingPlayer = this;
+        this._playing = true;
+
+        let offset = this.currentTime;
+        // Jump to the start if there are no notes left to play.
+        if (this.ns.notes.filter((note) => note.startTime > offset).length == 0) {
+          offset = 0;
+        }
+        this.currentTime = offset;
+
+        this.controlPanel.classList.remove('stopped');
+        this.controlPanel.classList.add('playing');
+        try {
+          // Force reload visualizers to prevent stuttering at playback start
+          for (const visualizer of this.visualizerListeners.keys()) {
+            if (visualizer.noteSequence != this.ns) {
+              visualizer.noteSequence = this.ns;
+              visualizer.reload();
+            }
+          }
+
+          const promise = this.player.start(this.ns, undefined, offset);
+          if (!looped) {
+            this.dispatchEvent(new CustomEvent('start'));
+          } else {
+            this.dispatchEvent(new CustomEvent('loop'));
+          }
+          await promise;
+          this.handleStop(true);
+        } catch (error) {
+          this.handleStop();
+          throw error;
+        }
+      } else if (this.player.getPlayState() == 'paused') {
+        // This normally should not happen, since we pause playback only when seeking.
+        this.player.resume();
       }
-    })();
+    }
   }
 
   pause() {

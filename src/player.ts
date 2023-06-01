@@ -209,6 +209,9 @@ export class PlayerElement extends HTMLElement {
       this.dispatchEvent(new CustomEvent('loadeddata'));
       if (this.src) {
         this.dispatchEvent(new CustomEvent('canplay'));
+        if (this.autoplay) {
+          await this.play();
+        }
       }
     } catch (error) {
       this.setError(String(error));
@@ -229,13 +232,13 @@ export class PlayerElement extends HTMLElement {
   }
 
   async play() {
-    const promise = this._start();
+    this._start(); // not use `await` (because it waits for ended timing)
+
     // `play` event fired when
     //    the paused prop is changed from true to false,
     //    as a result of the play method,
     //    or the autoplay attribute.
     this.dispatchEvent(new CustomEvent('play', { cancelable: false, bubbles: false }));
-    await promise;
   }
 
   protected async _start(looped = false) {
@@ -419,6 +422,10 @@ export class PlayerElement extends HTMLElement {
     this.ns = value;
     this.removeAttribute('src');  // Triggers initPlayer only if src was present.
     this.initPlayer();
+  }
+
+  get autoplay(): boolean {
+    return this.hasAttribute('autoplay');
   }
 
   get src() {

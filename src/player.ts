@@ -77,6 +77,7 @@ export class PlayerElement extends HTMLElement {
     this.attachShadow({mode: 'open'});
     this.shadowRoot.appendChild(controlsTemplate.content.cloneNode(true));
 
+    // TODO: hiding buttons when controls enabled
     this.controlPanel = this.shadowRoot.querySelector('.controls');
     this.playButton = this.controlPanel.querySelector('.play');
     this.currentTimeLabel = this.controlPanel.querySelector('.current-time');
@@ -454,6 +455,14 @@ export class PlayerElement extends HTMLElement {
 
   set soundFont(value: string | null) {
     this.setOrRemoveAttribute('sound-font', value);
+  }
+
+  get controls() {
+    return this.hasAttribute('controls');
+  }
+
+  set controls(value: boolean) {
+    this.setOrRemoveAttribute('controls', value ? '' : null);
   }
 
   /**

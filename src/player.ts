@@ -32,6 +32,7 @@ let playingPlayer: PlayerElement = null;
  * @prop loop - Indicates whether the player should loop
  * @prop currentTime - Current playback position in seconds
  * @prop duration - Content duration in seconds
+ * @prop paused - Indicates whether the player is currently paused
  * @prop playing - Indicates whether the player is currently playing
  * @attr visualizer - A selector matching `midi-visualizer` elements to bind to this player
  *
@@ -435,6 +436,10 @@ export class PlayerElement extends HTMLElement {
 
   get playing() {
     return this._playing;
+  }
+
+  get paused() {
+    return this.player?.getPlayState() === 'paused';
   }
 
   canPlayType(type: unknown): string {

@@ -67,6 +67,7 @@ export class PlayerElement extends HTMLElement {
   protected ns: INoteSequence = null;
   protected _playing = false;
   protected seeking = false;
+  protected _lastError: any = null; // TODO: should we follow MediaError interface?
 
   static get observedAttributes() { return ['sound-font', 'src', 'visualizer']; }
 
@@ -318,6 +319,7 @@ export class PlayerElement extends HTMLElement {
   protected dispatchError(error?: unknown) {
     // https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/error_event
     // This event is not cancelable and does not bubble.
+    this._lastError = error; // TODO: implement MediaError interface
     this.dispatchEvent(new CustomEvent('error', {
       detail: error,
       cancelable: false,
@@ -407,6 +409,10 @@ export class PlayerElement extends HTMLElement {
     this.ns = null;
     this.setOrRemoveAttribute('src', value);  // Triggers initPlayer only if src was present.
     this.initPlayer();
+  }
+
+  get error(): MediaError | null {
+    return this._lastError;
   }
 
   /**

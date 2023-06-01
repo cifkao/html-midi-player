@@ -333,6 +333,7 @@ export class PlayerElement extends HTMLElement {
     }
     this.seekBar.value = String(note.startTime);
     this.currentTimeLabel.textContent = utils.formatTime(note.startTime);
+    this.dispatchEvent(new CustomEvent('timeupdate'));
   }
 
   protected dispatchError(error?: unknown) {

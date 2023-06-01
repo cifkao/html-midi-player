@@ -7,7 +7,7 @@ import {VisualizerElement} from './visualizer';
 
 
 export type NoteEvent = CustomEvent<{note: NoteSequence.INote}>;
-const VISUALIZER_EVENTS = ['start', 'stop', 'note'] as const;
+const VISUALIZER_EVENTS = ['play', 'pause', 'note'] as const;
 const DEFAULT_SOUNDFONT = 'https://storage.googleapis.com/magentadata/js/soundfonts/sgm_plus';
 
 let playingPlayer: PlayerElement = null;
@@ -98,25 +98,23 @@ export class PlayerElement extends HTMLElement {
       if (this.player.isPlaying()) {
         this.stop();
       } else {
-        this.start();
+        this.play();
       }
     });
     this.seekBar.addEventListener('input', () => {
       // Pause playback while the user is manipulating the control
       this.seeking = true;
-      if (this.player && this.player.getPlayState() === 'started') {
+      if (this.player?.getPlayState() === 'started') {
         this.player.pause();
       }
     });
     this.seekBar.addEventListener('change', () => {
       const time = this.currentTime;  // This returns the seek bar value as a number
       this.currentTimeLabel.textContent = utils.formatTime(time);
-      if (this.player) {
-        if (this.player.isPlaying()) {
-          this.player.seekTo(time);
-          if (this.player.getPlayState() === 'paused') {
-            this.player.resume();
-          }
+      if (this.player?.isPlaying()) {
+        this.player.seekTo(time);
+        if (this.player.getPlayState() === 'paused') {
+          this.player.resume();
         }
       }
       this.seeking = false;
@@ -220,54 +218,56 @@ export class PlayerElement extends HTMLElement {
   }
 
   protected async _start(looped = false) {
-    if (this.player) {
-      if (this.player.getPlayState() == 'stopped') {
-        if (playingPlayer && playingPlayer.playing && !(playingPlayer == this && looped)) {
-          playingPlayer.stop();
-        }
-        playingPlayer = this;
-        this._playing = true;
+    if (!this.player) {
+      return;
+    }
 
-        let offset = this.currentTime;
-        // Jump to the start if there are no notes left to play.
-        if (this.ns.notes.filter((note) => note.startTime > offset).length == 0) {
-          offset = 0;
-        }
-        this.currentTime = offset;
-
-        this.controlPanel.classList.remove('stopped');
-        this.controlPanel.classList.add('playing');
-        try {
-          // Force reload visualizers to prevent stuttering at playback start
-          for (const visualizer of this.visualizerListeners.keys()) {
-            if (visualizer.noteSequence != this.ns) {
-              visualizer.noteSequence = this.ns;
-              visualizer.reload();
-            }
-          }
-
-          const promise = this.player.start(this.ns, undefined, offset);
-          if (!looped) {
-            this.dispatchEvent(new CustomEvent('start'));
-          } else {
-            this.dispatchEvent(new CustomEvent('loop'));
-          }
-          await promise;
-          this.handleStop(true);
-        } catch (error) {
-          this.handleStop();
-          throw error;
-        }
-      } else if (this.player.getPlayState() == 'paused') {
-        // This normally should not happen, since we pause playback only when seeking.
-        this.player.resume();
+    if (this.player.getPlayState() == 'stopped') {
+      if (playingPlayer && playingPlayer.playing && !(playingPlayer == this && looped)) {
+        playingPlayer.stop();
       }
+      playingPlayer = this;
+      this._playing = true;
+
+      let offset = this.currentTime;
+      // Jump to the start if there are no notes left to play.
+      if (this.ns.notes.filter((note) => note.startTime > offset).length == 0) {
+        offset = 0;
+      }
+      this.currentTime = offset;
+
+      this.controlPanel.classList.remove('stopped');
+      this.controlPanel.classList.add('playing');
+      try {
+        // Force reload visualizers to prevent stuttering at playback start
+        for (const visualizer of this.visualizerListeners.keys()) {
+          if (visualizer.noteSequence != this.ns) {
+            visualizer.noteSequence = this.ns;
+            visualizer.reload();
+          }
+        }
+
+        const promise = this.player.start(this.ns, undefined, offset);
+        if (!looped) {
+          this.dispatchEvent(new CustomEvent('start'));
+        } else {
+          this.dispatchEvent(new CustomEvent('loop'));
+        }
+        await promise;
+        this.handleStop(true);
+      } catch (error) {
+        this.handleStop();
+        throw error;
+      }
+    } else if (this.player.getPlayState() == 'paused') {
+      // This normally should not happen, since we pause playback only when seeking.
+      this.player.resume();
     }
   }
 
   pause() {
     if (this.player && this.player.isPlaying()) {
-      this.player.stop();
+      this.player.pause();
     }
     this.handleStop(false);
   }
@@ -281,8 +281,8 @@ export class PlayerElement extends HTMLElement {
 
   addVisualizer(visualizer: VisualizerElement) {
     const listeners = {
-      start: () => { visualizer.noteSequence = this.noteSequence; },
-      stop: () => { visualizer.clearActiveNotes(); },
+      play: () => { visualizer.noteSequence = this.noteSequence; },
+      pause: () => { visualizer.clearActiveNotes(); },
       note: (event: NoteEvent) => { visualizer.redraw(event.detail.note); },
     } as const;
     for (const name of VISUALIZER_EVENTS) {
@@ -324,7 +324,7 @@ export class PlayerElement extends HTMLElement {
     this.controlPanel.classList.add('stopped');
     if (this._playing) {
       this._playing = false;
-      this.dispatchEvent(new CustomEvent('stop', {detail: {finished}}));
+      this.dispatchEvent(new CustomEvent('pause', {detail: {finished}}));
     }
   }
 

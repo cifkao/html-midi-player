@@ -222,7 +222,13 @@ export class PlayerElement extends HTMLElement {
   }
 
   async play() {
-    await this._start();
+    const promise = this._start();
+    // `play` event fired when
+    //    the paused prop is changed from true to false,
+    //    as a result of the play method,
+    //    or the autoplay attribute.
+    this.dispatchEvent(new CustomEvent('play', { cancelable: false, bubbles: false }));
+    await promise;
   }
 
   protected async _start(looped = false) {
@@ -256,21 +262,23 @@ export class PlayerElement extends HTMLElement {
         }
 
         const promise = this.player.start(this.ns, undefined, offset);
-        if (!looped) {
-          this.dispatchEvent(new CustomEvent('start'));
-        } else {
+        // fired after playback is first started, and whenever it is restarted
+        this.dispatchEvent(new CustomEvent('playing', { cancelable: false, bubbles: false }));
+        if (looped) {
           this.dispatchEvent(new CustomEvent('loop'));
         }
         await promise;
         this.handleStop(true);
+        this.dispatchEvent(new CustomEvent('ended', { cancelable: false, bubbles: false }));
       } catch (error) {
         this.handleStop();
         this.dispatchError(error);
         throw error;
       }
     } else if (this.player.getPlayState() == 'paused') {
-      // This normally should not happen, since we pause playback only when seeking.
       this.player.resume();
+      // fired after playback is first started, and whenever it is restarted
+      this.dispatchEvent(new CustomEvent('playing', { cancelable: false, bubbles: false }));
     }
   }
 

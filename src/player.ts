@@ -510,7 +510,8 @@ export class PlayerElement extends HTMLElement {
   }
 
   get paused() {
-    return this.player?.getPlayState() === 'paused';
+    const playerState = this.player?.getPlayState();
+    return !playerState || playerState === 'paused' || playerState === 'stopped';
   }
 
   // https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/canPlayType

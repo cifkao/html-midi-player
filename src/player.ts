@@ -350,6 +350,8 @@ export class PlayerElement extends HTMLElement {
     }
     this.seekBar.value = String(note.startTime);
     this.currentTimeLabel.textContent = utils.formatTime(note.startTime);
+
+    // TODO: more efficient way? - Currently, multiple track midi can cause too much event triggers.
     this.dispatchEvent(new CustomEvent('timeupdate'));
   }
 
@@ -372,7 +374,9 @@ export class PlayerElement extends HTMLElement {
     this.controlPanel.classList.add('stopped');
     if (this._playing) {
       this._playing = false;
-      this.dispatchEvent(new CustomEvent('pause', {detail: {finished}}));
+      if (!this._ended) {
+        this.dispatchEvent(new CustomEvent('pause', {detail: {finished}}));
+      }
     }
   }
 

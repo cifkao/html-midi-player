@@ -106,6 +106,7 @@ export class PlayerElement extends HTMLElement {
     this.seekBar.addEventListener('input', () => {
       // Pause playback while the user is manipulating the control
       this.seeking = true;
+      this.dispatchEvent(new CustomEvent('seeking'));
       if (this.player?.getPlayState() === 'started') {
         this.player.pause();
       }
@@ -120,6 +121,7 @@ export class PlayerElement extends HTMLElement {
         }
       }
       this.seeking = false;
+      this.dispatchEvent(new CustomEvent('seeked'));
     });
 
     this.initPlayerNow();

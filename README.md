@@ -132,6 +132,13 @@ The player supports listening to different kinds of events using the `player.add
 ## FAQ
 Here are some frequently asked questions about `html-midi-player`. Make sure to also check [discussions](https://github.com/cifkao/html-midi-player/discussions) and [issues](https://github.com/cifkao/html-midi-player/issues?q=is%3Aissue) to see if your question is answered there.
 
+### Why is my MIDI file not loading?
+Please make sure that you provide a valid HTTP(S) URL, either absolute (beginning with `https://` or `http://`) or relative to your HTML file (if hosted on the same server).
+
+Local files most likely **will not work**, as most browsers block requests to local files. To test the MIDI player locally, you will need to start an HTTP server to host your MIDI file; see for example [this tutorial](https://developer.mozilla.org/en-US/docs/Learn/Common_questions/Tools_and_setup/set_up_a_local_testing_server#running_a_simple_local_http_server) for easy ways to do that.
+
+To diagnose why the MIDI file is not loading, hover over the exclamation mark to see the error; if the message is "Bad MIDI file. Expected 'MHdr'", it means either your file is not a valid MIDI file, or the server cannot find your file and is serving an error page instead. To see the file actually being served, open your browser's Developer Tools, go to the Network tab, reload the page, then find the name of your file in the list.
+
 ### How can I use custom samples?
 The player supports "SoundFonts" in a [special format](https://github.com/magenta/magenta-js/blob/d8a76682abb0979b985e4b80f6b68b5123b9f8d5/music/src/core/soundfont.ts#L381-L419) designed by Magenta. If you want to use a .sf2 file, it will not work out of the box, but it is possible to convert it with some effort. See [this discussion thread](https://github.com/cifkao/html-midi-player/discussions/43) and especially [this answer](https://github.com/cifkao/html-midi-player/discussions/43#discussioncomment-5439676), which proposes a conversion script.
 

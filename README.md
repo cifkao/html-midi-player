@@ -133,7 +133,7 @@ The player supports listening to different kinds of events using the `player.add
 Here are some frequently asked questions about `html-midi-player`. Make sure to also check [discussions](https://github.com/cifkao/html-midi-player/discussions) and [issues](https://github.com/cifkao/html-midi-player/issues?q=is%3Aissue) to see if your question is answered there.
 
 ### Why is my MIDI file not loading?
-Please make sure that you provide a valid HTTP(S) URL, either absolute (beginning with `https://` or `http://`) or relative to your HTML file (if hosted on the same server).
+Please make sure that you provide a valid HTTP(S) URL, either absolute (beginning with `https://` or `http://`) or relative with respect to your HTML file (if hosted on the same server).
 
 Local files most likely **will not work**, as most browsers block requests to local files. To test the MIDI player locally, you will need to start an HTTP server to host your MIDI file; see for example [this tutorial](https://developer.mozilla.org/en-US/docs/Learn/Common_questions/Tools_and_setup/set_up_a_local_testing_server#running_a_simple_local_http_server) for easy ways to do that.
 

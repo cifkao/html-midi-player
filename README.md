@@ -9,6 +9,8 @@
 and [`<midi-visualizer>`](https://github.com/cifkao/html-midi-player/blob/master/doc/midi-visualizer.md#midi-visualizer)
 HTML elements powered by [@magenta/music](https://github.com/magenta/magenta-js/tree/master/music/) (Magenta.js), fully stylable and scriptable.
 
+Works in Jupyter notebooks, Colab, and Weights & Biases thanks to the [midi-player](https://github.com/drscotthawley/midi-player) Python package by [@drscotthawley](https://github.com/drscotthawley).
+
 * [Simple demo](https://codepen.io/cifkao/pen/WNwpLzL)
 * [Advanced demo](https://codepen.io/cifkao/pen/GRZxqZN)
 * [Website](https://cifkao.github.io/html-midi-player/) [[source](https://github.com/cifkao/html-midi-player/tree/www)] with MIDI file upload

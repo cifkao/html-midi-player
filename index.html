@@ -31,8 +31,10 @@
     <script>
       window.addEventListener('DOMContentLoaded', function() {
         for (const player of document.querySelectorAll('midi-player')) {
-          for (const event of ['load', 'start', 'stop', 'loop']) {
-            player.addEventListener(event, console.log);
+          for (const event of ['loadstart', 'loadeddata', 'play', 'pause', 'stop', 'durationchange', 'timeupdate', 'ended', 'loop', 'error']) {
+            player.addEventListener(event, (e) => {
+              console.log(event, e);
+            });
           }
         }
 

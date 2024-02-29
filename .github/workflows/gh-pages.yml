@@ -19,7 +19,7 @@ jobs:
 
       - name: Set up Node.js environment
         uses: actions/setup-node@v2
-	with:
+        with:
           node-version: 21.6.2
 
       - name: Cache node_modules

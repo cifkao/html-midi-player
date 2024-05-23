@@ -47,6 +47,7 @@
     "@babel/preset-env": "^7.11.0",
     "@rollup/plugin-babel": "^5.2.0",
     "@rollup/plugin-typescript": "^5.0.2",
+    "@types/node": "^17.0.45",
     "focus-visible": "^5.1.0",
     "rollup": "^2.26.4",
     "rollup-plugin-dev": "^1.1.2",
@@ -60,5 +61,8 @@
   },
   "dependencies": {
     "@magenta/music": "^1.22.1"
+  },
+  "overrides": {
+    "ndarray-resample": "npm:dry-uninstall@0.3.0"
   }
 }

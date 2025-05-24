@@ -87,12 +87,6 @@ export class PlayerElement extends HTMLElement {
     }
     this.domInitialized = true;
 
-    const applyFocusVisiblePolyfill =
-      (window as any).applyFocusVisiblePolyfill as (scope: Document | ShadowRoot) => void;
-    if (applyFocusVisiblePolyfill != null) {
-      applyFocusVisiblePolyfill(this.shadowRoot);
-    }
-
     this.playButton.addEventListener('click', () => {
       if (this.player.isPlaying()) {
         this.stop();

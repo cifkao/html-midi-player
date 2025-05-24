@@ -109,7 +109,7 @@ export class PlayerElement extends HTMLElement {
     });
     this.seekBar.addEventListener('change', () => {
       const time = this.currentTime;  // This returns the seek bar value as a number
-      this.currentTimeLabel.textContent = utils.formatTime(time);
+      this.displayCurrentTime(time);
       if (this.player) {
         if (this.player.isPlaying()) {
           this.player.seekTo(time);
@@ -237,6 +237,7 @@ export class PlayerElement extends HTMLElement {
 
           this.controlPanel.classList.remove('stopped');
           this.controlPanel.classList.add('playing');
+          this.playButton.setAttribute('aria-label', 'Stop');
           try {
             // Force reload visualizers to prevent stuttering at playback start
             for (const visualizer of this.visualizerListeners.keys()) {
@@ -302,7 +303,7 @@ export class PlayerElement extends HTMLElement {
       return;
     }
     this.seekBar.value = String(note.startTime);
-    this.currentTimeLabel.textContent = utils.formatTime(note.startTime);
+    this.displayCurrentTime(note.startTime);
   }
 
   protected handleStop(finished = false) {
@@ -316,6 +317,7 @@ export class PlayerElement extends HTMLElement {
     }
     this.controlPanel.classList.remove('playing');
     this.controlPanel.classList.add('stopped');
+    this.playButton.setAttribute('aria-label', 'Play');
     if (this._playing) {
       this._playing = false;
       this.dispatchEvent(new CustomEvent('stop', {detail: {finished}}));
@@ -417,10 +419,15 @@ export class PlayerElement extends HTMLElement {
 
   set currentTime(value: number) {
     this.seekBar.value = String(value);
-    this.currentTimeLabel.textContent = utils.formatTime(this.currentTime);
+    this.displayCurrentTime(value);
     if (this.player && this.player.isPlaying()) {
       this.player.seekTo(value);
     }
+  }
+
+  protected displayCurrentTime(value: number) {
+    this.currentTimeLabel.textContent = utils.formatTime(value);
+    this.seekBar.setAttribute('aria-valuetext', `Elapsed time: ${utils.formatTime(value)}`);
   }
 
   get duration() {

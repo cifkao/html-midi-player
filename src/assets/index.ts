@@ -10,7 +10,7 @@ controlsTemplate.innerHTML = `
 <style>
 ${controlsCSS}
 </style>
-<div class="controls stopped frozen" part="control-panel" role="region" aria-label="MIDI player controls">
+<div class="controls stopped frozen" part="control-panel" role="region" aria-label="Player controls">
   <button class="play" part="play-button" aria-label="Play" disabled>
     <span class="icon play-icon" aria-hidden="true">${playIcon}</span>
     <span class="icon stop-icon" aria-hidden="true">${pauseIcon}</span>

@@ -19,6 +19,7 @@ type Visualizer = mm.PianoRollSVGVisualizer | mm.WaterfallSVGVisualizer | mm.Sta
  *
  * @prop src - MIDI file URL
  * @prop type - Visualizer type
+ * @prop lines - Number of lines in the visualizer (Only for `staff` type)
  * @prop noteSequence - Magenta note sequence object representing the currently displayed content
  * @prop config - Magenta visualizer config object
  */
@@ -27,7 +28,8 @@ export class VisualizerElement extends HTMLElement {
   private initTimeout: number;
 
   protected wrapper: HTMLDivElement;
-  protected visualizer: Visualizer;
+  protected visualizers: Visualizer[];
+  protected lastChunkIndex: number = 0;
 
   protected ns: INoteSequence = null;
   protected _config: mm.VisualizerConfig = {};
@@ -81,15 +83,24 @@ export class VisualizerElement extends HTMLElement {
       this.wrapper.classList.add('piano-roll-visualizer');
       const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
       this.wrapper.appendChild(svg);
-      this.visualizer = new mm.PianoRollSVGVisualizer(this.ns, svg, this._config);
+      this.visualizers = [new mm.PianoRollSVGVisualizer(this.ns, svg, this._config)];
     } else if (this.type === 'waterfall') {
       this.wrapper.classList.add('waterfall-visualizer');
-      this.visualizer = new mm.WaterfallSVGVisualizer(this.ns, this.wrapper, this._config);
+      this.visualizers = [new mm.WaterfallSVGVisualizer(this.ns, this.wrapper, this._config)];
     } else if (this.type === 'staff') {
       this.wrapper.classList.add('staff-visualizer');
-      const div = document.createElement('div');
-      this.wrapper.appendChild(div);
-      this.visualizer = new mm.StaffSVGVisualizer(this.ns, div, this._config);
+      this.visualizers = [];
+      const chunkSize = Math.ceil(this.ns.notes.length / this.lines);
+      for (let i = 0; i < this.ns.notes.length; i += chunkSize) {
+        const chunk = structuredClone(this.ns.notes.slice(i, i + chunkSize));
+        let startTime = chunk[0].startTime;
+        chunk.forEach(n => {n.startTime -= startTime;n.endTime -= startTime;});
+        const div = document.createElement('div');
+        this.wrapper.appendChild(div);
+        const new_ns = structuredClone(this.ns);
+        new_ns.notes = chunk;
+        this.visualizers.push(new mm.StaffSVGVisualizer(new_ns, div, this._config));
+      }
     }
   }
 
@@ -98,14 +109,26 @@ export class VisualizerElement extends HTMLElement {
   }
 
   redraw(activeNote?: NoteSequence.INote) {
-    if (this.visualizer) {
-      this.visualizer.redraw(activeNote, activeNote != null);
+    if (this.visualizers) {
+      if (this.type == "staff") {
+        let chunkIndex = Math.floor(this.ns.notes.indexOf(activeNote) / Math.ceil(this.ns.notes.length / this.lines));
+        if (chunkIndex != this.lastChunkIndex) {
+          this.visualizers[this.lastChunkIndex].redraw(activeNote, false); // clearActiveNotes() doesn't work
+          this.lastChunkIndex = chunkIndex;
+        }
+        const note = structuredClone(activeNote);
+        note.startTime -= this.ns.notes[chunkIndex * Math.ceil(this.ns.notes.length / this.lines)].startTime;
+        this.visualizers[chunkIndex].redraw(note, activeNote != null);
+      }
+      else {
+        this.visualizers.forEach(visualizer => visualizer.redraw(activeNote, activeNote != null));
+      }
     }
   }
 
   clearActiveNotes() {
-    if (this.visualizer) {
-      this.visualizer.clearActiveNotes();
+    if (this.visualizers) {
+      this.visualizers.forEach(visualizer => visualizer.clearActiveNotes());
     }
   }
 
@@ -146,6 +169,15 @@ export class VisualizerElement extends HTMLElement {
         `Unknown visualizer type ${value}. Allowed values: ${VISUALIZER_TYPES.join(', ')}`);
     }
     this.setOrRemoveAttribute('type', value);
+  }
+
+  get lines() {
+    let lines = Number(this.getAttribute('lines'))
+    return lines == 0 ? 1 : lines;
+  }
+
+  set lines(value: number) {
+    this.setOrRemoveAttribute('lines', value.toString() == '0' ? null : value.toString());
   }
 
   get config() {

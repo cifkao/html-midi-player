@@ -7,7 +7,7 @@ import {VisualizerElement} from './visualizer';
 
 
 export type NoteEvent = CustomEvent<{note: NoteSequence.INote}>;
-const VISUALIZER_EVENTS = ['start', 'stop', 'note'] as const;
+const VISUALIZER_EVENTS = ['play', 'pause', 'note'] as const;
 const DEFAULT_SOUNDFONT = 'https://storage.googleapis.com/magentadata/js/soundfonts/sgm_plus';
 
 let playingPlayer: PlayerElement = null;
@@ -32,11 +32,13 @@ let playingPlayer: PlayerElement = null;
  * @prop loop - Indicates whether the player should loop
  * @prop currentTime - Current playback position in seconds
  * @prop duration - Content duration in seconds
+ * @prop paused - Indicates whether the player is currently paused
  * @prop playing - Indicates whether the player is currently playing
  * @attr visualizer - A selector matching `midi-visualizer` elements to bind to this player
  *
  * @fires load - The content is loaded and ready to play
- * @fires start - The player has started playing
+ * @fires play - The player has started playing
+ * @fires pause - The player has paused playing
  * @fires stop - The player has stopped playing
  * @fires loop - The player has automatically restarted playback after reaching the end
  * @fires note - A note starts
@@ -63,8 +65,10 @@ export class PlayerElement extends HTMLElement {
   protected visualizerListeners = new Map<VisualizerElement, {[name: string]: EventListener}>();
 
   protected ns: INoteSequence = null;
+  protected _ended = false;
   protected _playing = false;
   protected seeking = false;
+  protected _lastError: any = null; // TODO: should we follow MediaError interface?
 
   static get observedAttributes() { return ['sound-font', 'src', 'visualizer']; }
 
@@ -74,6 +78,7 @@ export class PlayerElement extends HTMLElement {
     this.attachShadow({mode: 'open'});
     this.shadowRoot.appendChild(controlsTemplate.content.cloneNode(true));
 
+    // TODO: hiding buttons when controls enabled
     this.controlPanel = this.shadowRoot.querySelector('.controls');
     this.playButton = this.controlPanel.querySelector('.play');
     this.currentTimeLabel = this.controlPanel.querySelector('.current-time');
@@ -97,28 +102,28 @@ export class PlayerElement extends HTMLElement {
       if (this.player.isPlaying()) {
         this.stop();
       } else {
-        this.start();
+        this.play();
       }
     });
     this.seekBar.addEventListener('input', () => {
       // Pause playback while the user is manipulating the control
       this.seeking = true;
-      if (this.player && this.player.getPlayState() === 'started') {
+      this.dispatchEvent(new CustomEvent('seeking'));
+      if (this.player?.getPlayState() === 'started') {
         this.player.pause();
       }
     });
     this.seekBar.addEventListener('change', () => {
       const time = this.currentTime;  // This returns the seek bar value as a number
       this.currentTimeLabel.textContent = utils.formatTime(time);
-      if (this.player) {
-        if (this.player.isPlaying()) {
-          this.player.seekTo(time);
-          if (this.player.getPlayState() === 'paused') {
-            this.player.resume();
-          }
+      if (this.player?.isPlaying()) {
+        this.player.seekTo(time);
+        if (this.player.getPlayState() === 'paused') {
+          this.player.resume();
         }
       }
       this.seeking = false;
+      this.dispatchEvent(new CustomEvent('seeked'));
     });
 
     this.initPlayerNow();
@@ -161,12 +166,19 @@ export class PlayerElement extends HTMLElement {
       let ns: INoteSequence = null;
       if (initNs) {
         if (this.src) {
+          this.dispatchEvent(new CustomEvent('loadstart'));
           this.ns = null;
-          this.ns = await mm.urlToNoteSequence(this.src);
+          try {
+            this.ns = await mm.urlToNoteSequence(this.src);
+          } catch (e) {
+            this.dispatchEvent(new CustomEvent('abort'));
+            throw e;
+          }
         }
         this.currentTime = 0;
         if (!this.ns) {
           this.setError('No content loaded');
+          this.dispatchError('No content loaded');
         }
       }
       ns = this.ns;
@@ -174,9 +186,11 @@ export class PlayerElement extends HTMLElement {
       if (ns) {
         this.seekBar.max = String(ns.totalTime);
         this.totalTimeLabel.textContent = utils.formatTime(ns.totalTime);
+        this.dispatchEvent(new CustomEvent('durationchange'));
       } else {
         this.seekBar.max = '0';
         this.totalTimeLabel.textContent = utils.formatTime(0);
+        this.dispatchEvent(new CustomEvent('durationchange'));
         return;
       }
 
@@ -203,80 +217,113 @@ export class PlayerElement extends HTMLElement {
       }
 
       this.setLoaded();
-      this.dispatchEvent(new CustomEvent('load'));
+      this.dispatchEvent(new CustomEvent('loadeddata'));
+      if (this.src) {
+        this.dispatchEvent(new CustomEvent('canplay'));
+        if (this.autoplay) {
+          await this.play();
+        }
+      }
     } catch (error) {
       this.setError(String(error));
+      this.dispatchError(error);
       throw error;
     }
   }
 
-  reload() {
+  load() {
+    // https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/load
+    // resets the media element to its initial state and
+    // begins the process of selecting a media source and loading the media in preparation for playback to begin at the beginning.
     this.initPlayerNow();
   }
 
-  start() {
-    this._start();
+  reload() {
+    this.load(); // same behavior with load
   }
 
-  protected _start(looped = false) {
-    (async () => {
-      if (this.player) {
-        if (this.player.getPlayState() == 'stopped') {
-          if (playingPlayer && playingPlayer.playing && !(playingPlayer == this && looped)) {
-            playingPlayer.stop();
-          }
-          playingPlayer = this;
-          this._playing = true;
+  async play() {
+    this._start(); // not use `await` (because it waits for ended timing)
 
-          let offset = this.currentTime;
-          // Jump to the start if there are no notes left to play.
-          if (this.ns.notes.filter((note) => note.startTime > offset).length == 0) {
-            offset = 0;
-          }
-          this.currentTime = offset;
+    // `play` event fired when
+    //    the paused prop is changed from true to false,
+    //    as a result of the play method,
+    //    or the autoplay attribute.
+    this.dispatchEvent(new CustomEvent('play'));
+  }
 
-          this.controlPanel.classList.remove('stopped');
-          this.controlPanel.classList.add('playing');
-          try {
-            // Force reload visualizers to prevent stuttering at playback start
-            for (const visualizer of this.visualizerListeners.keys()) {
-              if (visualizer.noteSequence != this.ns) {
-                visualizer.noteSequence = this.ns;
-                visualizer.reload();
-              }
-            }
+  protected async _start(looped = false) {
+    if (!this.player) {
+      return;
+    }
 
-            const promise = this.player.start(this.ns, undefined, offset);
-            if (!looped) {
-              this.dispatchEvent(new CustomEvent('start'));
-            } else {
-              this.dispatchEvent(new CustomEvent('loop'));
-            }
-            await promise;
-            this.handleStop(true);
-          } catch (error) {
-            this.handleStop();
-            throw error;
-          }
-        } else if (this.player.getPlayState() == 'paused') {
-          // This normally should not happen, since we pause playback only when seeking.
-          this.player.resume();
-        }
+    if (this.player.getPlayState() == 'stopped') {
+      if (playingPlayer && playingPlayer.playing && !(playingPlayer == this && looped)) {
+        playingPlayer.stop();
       }
-    })();
+      playingPlayer = this;
+      this._playing = true;
+
+      let offset = this.currentTime;
+      // Jump to the start if there are no notes left to play.
+      if (this.ns.notes.filter((note) => note.startTime > offset).length == 0) {
+        offset = 0;
+      }
+      this.currentTime = offset;
+
+      this.controlPanel.classList.remove('stopped');
+      this.controlPanel.classList.add('playing');
+      try {
+        // Force reload visualizers to prevent stuttering at playback start
+        for (const visualizer of this.visualizerListeners.keys()) {
+          if (visualizer.noteSequence != this.ns) {
+            visualizer.noteSequence = this.ns;
+            visualizer.reload();
+          }
+        }
+
+        this._ended = false;
+        const promise = this.player.start(this.ns, undefined, offset);
+        // fired after playback is first started, and whenever it is restarted
+        this.dispatchEvent(new CustomEvent('playing'));
+        if (looped) {
+          this.dispatchEvent(new CustomEvent('loop'));
+        }
+        await promise;
+        this.dispatchEvent(new CustomEvent('ended'));
+        this._ended = true;
+        this.handleStop(true); // call after dispatch 'ended' event (it will trigger loop restart)
+      } catch (error) {
+        this.handleStop();
+        this.dispatchError(error);
+        throw error;
+      }
+    } else if (this.player.getPlayState() == 'paused') {
+      this._ended = false;
+      this.player.resume();
+      // fired after playback is first started, and whenever it is restarted
+      this.dispatchEvent(new CustomEvent('playing'));
+    }
+  }
+
+  pause() {
+    if (this.player && this.player.isPlaying()) {
+      this.player.pause();
+    }
+    this.handleStop(false);
   }
 
   stop() {
     if (this.player && this.player.isPlaying()) {
       this.player.stop();
     }
-    this.handleStop(false);
+    this.handleStop(true);
   }
 
   addVisualizer(visualizer: VisualizerElement) {
     const listeners = {
-      start: () => { visualizer.noteSequence = this.noteSequence; },
-      stop: () => { visualizer.clearActiveNotes(); },
+      play: () => { visualizer.noteSequence = this.noteSequence; },
+      pause: () => { visualizer.clearActiveNotes(); },
       note: (event: NoteEvent) => { visualizer.redraw(event.detail.note); },
     } as const;
     for (const name of VISUALIZER_EVENTS) {
@@ -303,6 +350,15 @@ export class PlayerElement extends HTMLElement {
     }
     this.seekBar.value = String(note.startTime);
     this.currentTimeLabel.textContent = utils.formatTime(note.startTime);
+
+    // TODO: more efficient way? - Currently, multiple track midi can cause too much event triggers.
+    this.dispatchEvent(new CustomEvent('timeupdate'));
+  }
+
+  protected dispatchError(error?: unknown) {
+    // https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/error_event
+    this._lastError = error; // TODO: implement MediaError interface
+    this.dispatchEvent(new CustomEvent('error'));
   }
 
   protected handleStop(finished = false) {
@@ -318,7 +374,9 @@ export class PlayerElement extends HTMLElement {
     this.controlPanel.classList.add('stopped');
     if (this._playing) {
       this._playing = false;
-      this.dispatchEvent(new CustomEvent('stop', {detail: {finished}}));
+      if (!this._ended) {
+        this.dispatchEvent(new CustomEvent('pause', {detail: {finished}}));
+      }
     }
   }
 
@@ -379,6 +437,14 @@ export class PlayerElement extends HTMLElement {
     this.initPlayer();
   }
 
+  get autoplay(): boolean {
+    return this.hasAttribute('autoplay');
+  }
+
+  set autoplay(value: boolean) {
+    this.setOrRemoveAttribute('autoplay', value ? '' : null);
+  }
+
   get src() {
     return this.getAttribute('src');
   }
@@ -387,6 +453,10 @@ export class PlayerElement extends HTMLElement {
     this.ns = null;
     this.setOrRemoveAttribute('src', value);  // Triggers initPlayer only if src was present.
     this.initPlayer();
+  }
+
+  get error(): MediaError | null {
+    return this._lastError;
   }
 
   /**
@@ -398,6 +468,14 @@ export class PlayerElement extends HTMLElement {
 
   set soundFont(value: string | null) {
     this.setOrRemoveAttribute('sound-font', value);
+  }
+
+  get controls() {
+    return this.hasAttribute('controls');
+  }
+
+  set controls(value: boolean) {
+    this.setOrRemoveAttribute('controls', value ? '' : null);
   }
 
   /**
@@ -429,6 +507,29 @@ export class PlayerElement extends HTMLElement {
 
   get playing() {
     return this._playing;
+  }
+
+  get ended() {
+    return this._ended;
+  }
+
+  get paused() {
+    const playerState = this.player?.getPlayState();
+    return !playerState || playerState === 'paused' || playerState === 'stopped';
+  }
+
+  // https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/canPlayType
+  canPlayType(type: unknown): string {
+    // return: '' | 'maybe' | 'probably';
+    // TODO: consider 'maybe' return case in some cases.
+    return typeof type === 'string' && (
+      // type: https://developer.mozilla.org/en-US/docs/Web/Media/Formats/codecs_parameter
+      type.includes('audio/midi') || type.includes('audio/x-midi')
+    ) ? 'probably' : '';
+  }
+
+  fastSeek(seconds: number) {
+    this.currentTime = seconds;
   }
 
   protected setOrRemoveAttribute(name: string, value: string) {

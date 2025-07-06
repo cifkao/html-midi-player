@@ -31,6 +31,6 @@
   "dependencies": {
     "@magenta/music": "^1.22.1",
     "focus-visible": "^5.2.0",
-    "html-midi-player": "^1.5.0"
+    "html-midi-player": "^1.6.0-0"
   }
 }

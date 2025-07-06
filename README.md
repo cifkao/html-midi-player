@@ -24,7 +24,7 @@ If you use `html-midi-player` on your website, please consider linking back to [
 1. Add the necessary scripts to your page:
 
    ```html
-   <script src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.23.1/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.5.0"></script>
+   <script src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.23.1/es6/core.js,npm/html-midi-player@1.5.0"></script>
    ```
 
 2. Add a player and a visualizer:
@@ -33,7 +33,7 @@ If you use `html-midi-player` on your website, please consider linking back to [
    ```
    <custom-element-demo>
      <template>
-       <script src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.23.1/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.5.0"></script>
+       <script src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.23.1/es6/core.js,npm/html-midi-player@1.5.0"></script>
        <next-code-block></next-code-block>
      </template>
    </custom-element-demo>
@@ -56,8 +56,6 @@ Besides [jsDelivr](https://www.jsdelivr.com/package/npm/html-midi-player), the b
 You can also add the package to your project from NPM, e.g. `npm install --save html-midi-player` or `yarn add html-midi-player`. Then you can either:
 - `import 'html-midi-player'` in your JavaScript code (as an ES Module), or
 - add the `node_modules/html-midi-player/dist/midi-player.min.js` bundle directly to your page, along with the dependencies (`node_modules/tone/build/Tone.js`, `node_modules/@magenta/music/es6/core.js`; note that these need to go *before* `html-midi-player`).
-
-In both cases, you should also add the [`focus-visible` polyfill](https://github.com/WICG/focus-visible) to enable outlines on keyboard focus.
 
 ## API basics
 

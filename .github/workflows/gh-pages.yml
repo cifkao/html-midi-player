@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Set up Ruby environment
         uses: ruby/setup-ruby@v1
@@ -23,7 +23,7 @@ jobs:
           node-version: 21.6.2
 
       - name: Cache node_modules
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         env:
           cache-name: cache-node-modules
         with:
@@ -35,14 +35,25 @@ jobs:
             ${{ runner.os }}-
 
       - name: Install Node.js dependencies
-        run: yarn install
+        run: npm install
 
       - name: Build website
-        run: yarn build
+        run: npm build
 
-      - name: Deploy to www-build
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Upload static files as artifact
+        id: deployment
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./_site
-          publish_branch: www-build
+          path: _site/
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

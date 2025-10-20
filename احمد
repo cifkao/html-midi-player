@@ -1,0 +1,86 @@
+# ------------------------------------------------------------
+# 🎵 "عايش الصدى" - نسخة موسعة
+# إعداد: أحمد والمساعد الذكي 🎶
+# النمط: هادئ، شجن، تصاعد درامي بنكهة فضل شاكر
+# ------------------------------------------------------------
+
+!pip install midiutil
+
+from midiutil import MIDIFile
+from google.colab import files
+
+# إنشاء ملف MIDI مع 3 مسارات
+midi = MIDIFile(3)
+tempo = 68
+for track in range(3):
+    midi.addTempo(track, 0, tempo)
+
+# ------------------------------------------------------------
+# 🎹 المسار 1 - البيانو (اللحن الرئيسي)
+# ------------------------------------------------------------
+# المقدمة
+piano_intro = [48, 50, 51, 53, 55, 56, 58, 60]  # C minor scale
+time = 0
+for i in range(2):
+    for note in piano_intro:
+        midi.addNote(0, 0, note, time, 0.5, 85)
+        time += 0.5
+
+# الكورس - تصاعد درامي
+piano_chorus = [60, 63, 65, 67, 68, 67, 65, 63, 60]
+for note in piano_chorus:
+    midi.addNote(0, 0, note, time, 0.75, 100)
+    time += 0.5
+
+# الختام - هبوط ناعم
+piano_outro = [60, 58, 56, 55, 53, 51, 50, 48]
+for note in piano_outro:
+    midi.addNote(0, 0, note, time, 0.5, 75)
+    time += 0.5
+
+
+# ------------------------------------------------------------
+# 🎻 المسار 2 - الكمان (خلفية متناغمة)
+# ------------------------------------------------------------
+violin_intro = [60, 62, 63, 65, 67, 68, 70, 72]
+time = 0
+for i in range(2):
+    for note in violin_intro:
+        midi.addNote(1, 1, note, time, 1, 60)
+        time += 0.5
+
+# كورس درامي (نغمة أعلى)
+violin_chorus = [72, 74, 75, 77, 79, 80, 79, 77, 75]
+for note in violin_chorus:
+    midi.addNote(1, 1, note, time, 1, 90)
+    time += 0.5
+
+# ختام هادئ
+violin_outro = [72, 70, 68, 67, 65, 63, 62, 60]
+for note in violin_outro:
+    midi.addNote(1, 1, note, time, 1, 55)
+    time += 0.5
+
+
+# ------------------------------------------------------------
+# 🪕 المسار 3 - العود (إيقاع الخلفية)
+# ------------------------------------------------------------
+oud_pattern = [48, 51, 55, 58]
+time = 0
+for i in range(32):
+    for note in oud_pattern:
+        midi.addNote(2, 2, note, time, 0.25, 70)
+        time += 0.25
+
+
+# ------------------------------------------------------------
+# 💾 حفظ الملف وتصديره
+# ------------------------------------------------------------
+file_name = "Aaish_aSada_Full_Version_Extended.mid"
+with open(file_name, "wb") as output_file:
+    midi.writeFile(output_file)
+
+# تنزيل مباشر
+files.download(file_name)
+
+print("✅ تم إنشاء الأغنية الكاملة بنجاح! استمتع باللحن ✨")

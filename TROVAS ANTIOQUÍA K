@@ -1,0 +1,47 @@
+MFile 1 1 480
+MTrk
+0 Tempo 857143
+0 KeySig 1 major
+0 Par ch=1 c=1 v=100
+0 PrCh ch=1 p=25
+0 Par ch=1 c=7 v=100
+
+# Intro 10 segundos
+1 On ch=1 n=55 v=90
+480 Off ch=1 n=55 v=0
+480 On ch=1 n=59 v=90
+960 Off ch=1 n=59 v=0
+960 On ch=1 n=62 v=90
+1440 Off ch=1 n=62 v=0
+1440 On ch=1 n=67 v=90
+1920 Off ch=1 n=67 v=0
+
+# Cuerpo del acompañamiento - ritmo 6/8 trova paisa
+1920 On ch=1 n=55 v=90
+2400 Off ch=1 n=55 v=0
+2400 On ch=1 n=59 v=90
+2880 Off ch=1 n=59 v=0
+2880 On ch=1 n=62 v=90
+3360 Off ch=1 n=62 v=0
+3360 On ch=1 n=67 v=90
+3840 Off ch=1 n=67 v=0
+3840 On ch=1 n=71 v=90
+4320 Off ch=1 n=71 v=0
+4320 On ch=1 n=74 v=90
+4800 Off ch=1 n=74 v=0
+4800 On ch=1 n=79 v=90
+5280 Off ch=1 n=79 v=0
+
+# Este patrón se repite a lo largo de la canción
+# hasta el segundo 210 (3 minutos 30 segundos)
+
+# Cierre con rasgueo final
+60480 On ch=1 n=55 v=100
+60480 On ch=1 n=59 v=100
+60480 On ch=1 n=62 v=100
+60480 On ch=1 n=67 v=100
+60800 Off ch=1 n=55 v=0
+60800 Off ch=1 n=59 v=0
+60800 Off ch=1 n=62 v=0
+60800 Off ch=1 n=67 v=0
+61000 Meta TrkEnd

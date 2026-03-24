@@ -53,6 +53,7 @@ export class PlayerElement extends HTMLElement {
   private domInitialized = false;
   private initTimeout: number;
   private needInitNs = false;
+  private pendingVisualizerSelector: string = undefined;
 
   protected player: mm.BasePlayer;
   protected controlPanel: HTMLElement;
@@ -116,6 +117,11 @@ export class PlayerElement extends HTMLElement {
     });
 
     this.initPlayerNow();
+
+    if (this.pendingVisualizerSelector !== undefined) {
+      this.setVisualizerSelector(this.pendingVisualizerSelector);
+      this.pendingVisualizerSelector = undefined;
+    }
   }
 
   attributeChangedCallback(name: string, _oldValue: string, newValue: string) {
@@ -126,11 +132,10 @@ export class PlayerElement extends HTMLElement {
     if (name === 'sound-font' || name === 'src') {
       this.initPlayer();
     } else if (name === 'visualizer') {
-      const fn = () => { this.setVisualizerSelector(newValue); };
-      if (document.readyState === 'loading') {
-        window.addEventListener('DOMContentLoaded', fn);
+      if (this.domInitialized) {
+        this.setVisualizerSelector(newValue);
       } else {
-        fn();
+        this.pendingVisualizerSelector = newValue;
       }
     }
   }
@@ -329,7 +334,9 @@ export class PlayerElement extends HTMLElement {
 
     // Match visualizers and add them as listeners
     if (selector != null) {
-      for (const element of document.querySelectorAll(selector)) {
+      const elements = document.querySelectorAll(selector);
+      elements.forEach((el) => customElements.upgrade(el));
+      for (const element of elements) {
         if (!(element instanceof VisualizerElement)) {
           console.warn(`Selector ${selector} matched non-visualizer element`, element);
           continue;
